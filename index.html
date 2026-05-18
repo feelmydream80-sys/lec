@@ -185,7 +185,6 @@ body {
 const courses = [
   {
     folder: 'ViveCodingIntro',
-    file: 'vibe-coding-intro_3.html',
     name: 'Vibe Coding 입문',
     desc: 'AI에게 말로 지시해서 앱을 만드는<br>새로운 개발 패러다임을 배웁니다',
     accent: '#4fffb0',
@@ -194,7 +193,6 @@ const courses = [
   },
   {
     folder: 'KidsSafty',
-    file: 'KidsSafeAI_PPT_v4.html',
     name: 'Kids Safe AI',
     desc: '어린이를 위한 안전한 AI 활용 교육.<br>AI의 위험성과 올바른 사용법을 알아봅니다',
     accent: '#ff6b6b',
@@ -208,7 +206,7 @@ document.getElementById('course-count').textContent = courses.length;
 const grid = document.getElementById('course-grid');
 courses.forEach((c, i) => {
   const card = document.createElement('a');
-  card.href = c.folder + '/' + c.file;
+  card.href = c.folder + '/';
   card.className = 'course-card anim anim-' + Math.min(i + 1, 4);
   card.style.setProperty('--accent', c.accent);
   card.style.setProperty('--accent-rgb', c.accentRgb);
