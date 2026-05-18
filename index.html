@@ -150,9 +150,37 @@ body {
   pointer-events: none;
   letter-spacing: -0.05em;
 }
-.footer {
+.url-section {
   text-align: center;
   margin-top: 48px;
+}
+.url-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.url-box {
+  display: inline-flex;
+  padding: 14px 32px;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(79,255,176,0.25);
+  border-left: 4px solid #4fffb0;
+  border-radius: 10px;
+  box-shadow: 0 0 40px rgba(79,255,176,0.06);
+}
+.url-text {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(16px, 2.5vw, 24px);
+  font-weight: 700;
+  color: #4fffb0;
+  letter-spacing: 0.02em;
+}
+.footer {
+  text-align: center;
+  margin-top: 32px;
   font-family: 'Space Mono', monospace;
   font-size: 9px;
   color: rgba(255,255,255,0.12);
@@ -179,6 +207,12 @@ body {
     <div class="count-badge">📚 총 <span id="course-count">0</span>개 강의</div>
   </div>
   <div class="course-grid" id="course-grid"></div>
+  <div class="url-section anim anim-3">
+    <div class="url-label">강의 접속 주소</div>
+    <div class="url-box">
+      <span class="url-text">https://feelmydream80-sys.github.io/lec/</span>
+    </div>
+  </div>
   <div class="footer">© 2026 LEC</div>
 </div>
 <script>
