@@ -174,71 +174,23 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 14px;
 }
-.project-card {
-  background: rgba(12,12,16,0.85);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 32px 28px 24px;
-  position: relative;
-  overflow: hidden;
-  backdrop-filter: blur(40px);
-  transition: all 0.3s ease;
-  cursor: pointer;
-  text-decoration: none;
-  color: inherit;
-  display: flex;
-  flex-direction: column;
-}
-.project-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 22px; right: 22px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent, #48dbfb), transparent);
-  opacity: 0.5;
-}
-.project-card:hover {
-  border-color: rgba(255,255,255,0.15);
-  transform: translateY(-3px);
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 20px 40px rgba(0,0,0,0.4);
-}
-.project-card:active {
-  transform: translateY(-1px);
-}
-.pcard-icon {
-  width: 72px; height: 72px;
-  border-radius: 14px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 36px;
-  margin-bottom: 16px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border);
-}
-.pcard-title {
-  font-size: 32px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: 6px;
-}
-.pcard-desc {
-  font-size: 24px;
-  color: var(--muted);
-  font-weight: 300;
-  line-height: 1.5;
-  margin-bottom: 14px;
-  flex: 1;
-}
-.pcard-tag {
+.card-tag {
   display: inline-flex;
-  padding: 4px 12px;
+  align-items: center;
+  align-self: flex-start;
+  padding: 8px 20px;
   border-radius: 4px;
   font-family: 'Space Mono', monospace;
-  font-size: 16px;
-  letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.3);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.4);
   border: 1px solid var(--border);
-  align-self: flex-start;
+  text-transform: uppercase;
 }
+.card-inner-1 { animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) both; animation-delay: 0.08s; }
+.card-inner-2 { animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) both; animation-delay: 0.18s; }
+.card-inner-3 { animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) both; animation-delay: 0.3s; }
+.card-inner-4 { animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) both; animation-delay: 0.44s; }
 .url-section {
   text-align: center;
   margin-top: 48px;
@@ -453,10 +405,10 @@ courses.forEach((c, i) => {
   card.style.setProperty('--accent-rgb', c.accentRgb);
   card.innerHTML =
     '<div class="card-bg-num">' + String(i + 1).padStart(2, '0') + '</div>' +
-    '<div class="card-icon">' + c.icon + '</div>' +
-    '<div class="card-title" style="color:' + c.accent + '">' + c.name + '</div>' +
-    '<div class="card-sub">' + c.desc + '</div>' +
-    '<div class="card-btn" style="background:' + c.accent + '">시작하기 ▶</div>';
+    '<div class="card-icon card-inner-1">' + c.icon + '</div>' +
+    '<div class="card-title card-inner-2" style="color:' + c.accent + '">' + c.name + '</div>' +
+    '<div class="card-sub card-inner-3">' + c.desc + '</div>' +
+    '<div class="card-btn card-inner-4" style="background:' + c.accent + '">시작하기 ▶</div>';
   grid.appendChild(card);
 });
 
@@ -501,13 +453,13 @@ projects.forEach((p) => {
   card.href = p.url;
   card.target = '_blank';
   card.rel = 'noopener';
-  card.className = 'project-card anim anim-4';
+  card.className = 'course-card anim anim-4';
   card.style.setProperty('--accent', p.accent);
   card.innerHTML =
-    '<div class="pcard-icon" style="color:' + p.accent + '">' + p.icon + '</div>' +
-    '<div class="pcard-title" style="color:' + p.accent + '">' + p.name + '</div>' +
-    '<div class="pcard-desc">' + p.desc + '</div>' +
-    '<div class="pcard-tag">' + p.tag + '</div>';
+    '<div class="card-icon card-inner-1" style="color:' + p.accent + '">' + p.icon + '</div>' +
+    '<div class="card-title card-inner-2" style="color:' + p.accent + '">' + p.name + '</div>' +
+    '<div class="card-sub card-inner-3">' + p.desc + '</div>' +
+    '<div class="card-tag card-inner-4">' + p.tag + '</div>';
   pgrid.appendChild(card);
 });
 </script>
