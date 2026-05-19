@@ -178,9 +178,67 @@ body {
   color: #4fffb0;
   letter-spacing: 0.02em;
 }
+.duck-scene {
+  position: relative;
+  width: 100%;
+  height: 56px;
+  margin-top: 32px;
+  overflow: hidden;
+}
+.ground-line {
+  position: absolute;
+  bottom: 4px; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(79,255,176,0.06), transparent);
+}
+.duck {
+  position: absolute;
+  bottom: 4px;
+  animation: duck-walk 16s linear infinite;
+}
+.duck.mom   { animation-delay: -11s; z-index: 4; }
+.duck.baby1 { animation-delay: -8s;  z-index: 3; }
+.duck.baby2 { animation-delay: -5s;  z-index: 2; }
+.duck.baby3 { animation-delay: -2s;  z-index: 1; }
+.duck-inner { animation: duck-bob 0.6s ease-in-out infinite; }
+.duck-body {
+  border-radius: 50%; background: #ffca3a; position: relative;
+}
+.duck.mom .duck-body { width: 32px; height: 22px; }
+.duck.baby .duck-body { width: 20px; height: 14px; }
+.duck-head {
+  position: absolute; border-radius: 50%; background: #ffca3a;
+}
+.duck.mom .duck-head { width: 16px; height: 16px; top: -10px; left: 14px; }
+.duck.baby .duck-head { width: 10px; height: 10px; top: -6px; left: 9px; }
+.duck-eye {
+  position: absolute; border-radius: 50%; background: #1a1a2e;
+}
+.duck.mom .duck-eye { width: 2.5px; height: 2.5px; top: 4px; left: 10px; }
+.duck.baby .duck-eye { width: 1.5px; height: 1.5px; top: 3px; left: 6px; }
+.duck-beak {
+  position: absolute; width: 0; height: 0;
+  border-left: 4px solid transparent; border-right: 4px solid transparent;
+  border-bottom: 5px solid #ff9f43;
+}
+.duck.mom .duck-beak { top: 6px; left: 24px; }
+.duck.baby .duck-beak { top: 4px; left: 16px; border-left-width: 3px; border-right-width: 3px; border-bottom-width: 3px; }
+.duck-wing {
+  position: absolute; border-radius: 50%; background: rgba(0,0,0,0.06);
+}
+.duck.mom .duck-wing { width: 14px; height: 9px; top: 7px; left: 5px; }
+.duck.baby .duck-wing { width: 9px; height: 6px; top: 4px; left: 3px; }
+@keyframes duck-walk {
+  0%   { transform: translateX(-100px); }
+  100% { transform: translateX(calc(100% + 30px)); }
+}
+@keyframes duck-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
 .footer {
   text-align: center;
-  margin-top: 32px;
+  margin-top: 20px;
   font-family: 'Space Mono', monospace;
   font-size: 9px;
   color: rgba(255,255,255,0.12);
@@ -211,6 +269,53 @@ body {
     <div class="url-label">강의 접속 주소</div>
     <div class="url-box">
       <span class="url-text">https://feelmydream80-sys.github.io/lec/</span>
+    </div>
+  </div>
+  <div class="duck-scene">
+    <div class="ground-line"></div>
+    <div class="duck mom">
+      <div class="duck-inner">
+        <div class="duck-body">
+          <div class="duck-wing"></div>
+          <div class="duck-head">
+            <div class="duck-eye"></div>
+            <div class="duck-beak"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="duck baby baby1">
+      <div class="duck-inner">
+        <div class="duck-body">
+          <div class="duck-wing"></div>
+          <div class="duck-head">
+            <div class="duck-eye"></div>
+            <div class="duck-beak"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="duck baby baby2">
+      <div class="duck-inner">
+        <div class="duck-body">
+          <div class="duck-wing"></div>
+          <div class="duck-head">
+            <div class="duck-eye"></div>
+            <div class="duck-beak"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="duck baby baby3">
+      <div class="duck-inner">
+        <div class="duck-body">
+          <div class="duck-wing"></div>
+          <div class="duck-head">
+            <div class="duck-eye"></div>
+            <div class="duck-beak"></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="footer">© 2026 LEC</div>
