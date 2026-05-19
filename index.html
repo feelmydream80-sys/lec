@@ -201,6 +201,10 @@ body {
 .duck.baby2 { animation-delay: -5s;  z-index: 2; }
 .duck.baby3 { animation-delay: -2s;  z-index: 1; }
 .duck-inner { animation: duck-bob 0.6s ease-in-out infinite; }
+.duck.mom   .duck-inner { animation-delay: 0s; }
+.duck.baby1 .duck-inner { animation-delay: 0.15s; }
+.duck.baby2 .duck-inner { animation-delay: 0.35s; }
+.duck.baby3 .duck-inner { animation-delay: 0.5s; }
 .duck-body {
   border-radius: 50%; background: #ffca3a; position: relative;
 }
@@ -229,8 +233,10 @@ body {
 .duck.mom .duck-wing { width: 14px; height: 9px; top: 7px; left: 5px; }
 .duck.baby .duck-wing { width: 9px; height: 6px; top: 4px; left: 3px; }
 @keyframes duck-walk {
-  0%   { transform: translateX(-100px); }
-  100% { transform: translateX(calc(100% + 30px)); }
+  0%   { transform: translateX(-100px); opacity: 0; }
+  6%   { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { transform: translateX(calc(100% + 50px)); opacity: 0; }
 }
 @keyframes duck-bob {
   0%, 100% { transform: translateY(0); }
