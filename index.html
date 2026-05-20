@@ -38,16 +38,13 @@ body {
 nav {
   flex-shrink: 0;
   height: 52px;
-  background: rgba(255,255,255,0.85);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 0.5px solid var(--border-strong);
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 28px;
   position: relative; z-index: 2;
 }
 .logo {
-  font-size: 15px; font-weight: 600; color: var(--text);
+  font-size: 15px; font-weight: 700; color: #fff;
   letter-spacing: -0.3px;
   text-decoration: none;
 }
@@ -55,20 +52,20 @@ nav {
 .tab-btn {
   background: none; border: none;
   font-family: var(--font-sans); font-size: 13px; font-weight: 400;
-  color: var(--sub); padding: 6px 14px;
+  color: rgba(255,255,255,0.55); padding: 6px 14px;
   border-radius: 6px; cursor: pointer;
   display: flex; align-items: center; gap: 5px;
-  transition: color 0.15s, background 0.15s;
+  transition: all 0.15s;
   letter-spacing: -0.1px;
 }
-.tab-btn:hover { color: var(--text); background: rgba(0,0,0,0.04); }
-.tab-btn.active { color: var(--accent); font-weight: 500; background: var(--accent-light); }
+.tab-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
+.tab-btn.active { color: #fff; font-weight: 600; background: rgba(0,113,227,0.25); }
 .tab-btn .cnt {
   font-size: 10px; font-weight: 600;
-  background: rgba(0,0,0,0.07); color: var(--sub);
+  background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.6);
   padding: 1px 6px; border-radius: 99px; line-height: 1.7;
 }
-.tab-btn.active .cnt { background: var(--accent); color: white; }
+.tab-btn.active .cnt { background: #0071E3; color: #fff; }
 
 /* PAGES */
 .pages { flex: 1; overflow: hidden; position: relative; z-index: 1; }
