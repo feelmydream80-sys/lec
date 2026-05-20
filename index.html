@@ -9,19 +9,19 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --accent: #4fffb0;
-  --accent-light: rgba(79,255,176,0.08);
-  --bg: #060608;
-  --surface: rgba(255,255,255,0.04);
-  --surface2: rgba(255,255,255,0.02);
-  --border: rgba(255,255,255,0.08);
-  --border-strong: rgba(255,255,255,0.13);
-  --text: #f0f0f0;
-  --sub: rgba(255,255,255,0.55);
-  --muted: rgba(255,255,255,0.3);
-  --teal: #4fffb0;
-  --teal-bg: rgba(79,255,176,0.1);
-  --font-sans: 'Noto Sans KR', -apple-system, 'Helvetica Neue', sans-serif;
+  --accent: #0071E3;
+  --accent-light: rgba(0,113,227,0.08);
+  --bg: #F5F5F7;
+  --surface: #FFFFFF;
+  --surface2: #FAFAFA;
+  --border: rgba(0,0,0,0.08);
+  --border-strong: rgba(0,0,0,0.13);
+  --text: #1D1D1F;
+  --sub: #6E6E73;
+  --muted: #AEAEB2;
+  --teal: #34C759;
+  --teal-bg: rgba(52,199,89,0.1);
+  --font-sans: -apple-system, 'SF Pro Display', 'Helvetica Neue', 'Noto Sans KR', sans-serif;
   --font-mono: 'Space Mono', 'SF Mono', 'Menlo', monospace;
 }
 html, body { height: 100%; overflow: hidden; }
@@ -33,28 +33,12 @@ body {
   flex-direction: column;
   -webkit-font-smoothing: antialiased;
 }
-.bg-grid {
-  position: fixed; inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-  background-size: 60px 60px;
-  z-index: 0;
-}
-.bg-glow {
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
-}
-.glow-orb {
-  position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.1;
-}
-.glow-1 { width: 500px; height: 500px; top: -150px; left: -150px; background: #4fffb0; }
-.glow-2 { width: 400px; height: 400px; bottom: -150px; right: -150px; background: #c77dff; }
 
 /* NAV */
 nav {
   flex-shrink: 0;
   height: 52px;
-  background: rgba(6,6,8,0.85);
+  background: rgba(255,255,255,0.85);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   border-bottom: 0.5px solid var(--border-strong);
@@ -63,10 +47,9 @@ nav {
   position: relative; z-index: 2;
 }
 .logo {
-  font-size: 15px; font-weight: 700; color: var(--accent);
+  font-size: 15px; font-weight: 600; color: var(--text);
   letter-spacing: -0.3px;
   text-decoration: none;
-  font-family: var(--font-mono);
 }
 .tabs { display: flex; gap: 0; list-style: none; }
 .tab-btn {
@@ -78,14 +61,14 @@ nav {
   transition: color 0.15s, background 0.15s;
   letter-spacing: -0.1px;
 }
-.tab-btn:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+.tab-btn:hover { color: var(--text); background: rgba(0,0,0,0.04); }
 .tab-btn.active { color: var(--accent); font-weight: 500; background: var(--accent-light); }
 .tab-btn .cnt {
   font-size: 10px; font-weight: 600;
-  background: rgba(255,255,255,0.07); color: var(--sub);
+  background: rgba(0,0,0,0.07); color: var(--sub);
   padding: 1px 6px; border-radius: 99px; line-height: 1.7;
 }
-.tab-btn.active .cnt { background: var(--accent); color: #060608; }
+.tab-btn.active .cnt { background: var(--accent); color: white; }
 
 /* PAGES */
 .pages { flex: 1; overflow: hidden; position: relative; z-index: 1; }
@@ -117,10 +100,10 @@ nav {
 }
 .qr-box {
   flex-shrink: 0;
-  width: 72px; height: 72px;
-  border-radius: 12px;
+  width: 120px; height: 120px;
+  border-radius: 14px;
   border: 0.5px solid var(--border-strong);
-  padding: 6px;
+  padding: 8px;
   background: white;
 }
 .qr-box img { width: 100%; height: 100%; object-fit: contain; border-radius: 6px; display: block; }
@@ -142,7 +125,7 @@ nav {
   height: 3px;
   background: var(--card-color, var(--accent)); opacity: 0.7;
 }
-.quick-card:hover { background: var(--surface2); box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+.quick-card:hover { background: var(--surface2); box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
 .quick-card:active { transform: scale(0.98); }
 .q-label { font-size: 12px; font-weight: 500; color: var(--sub); letter-spacing: -0.1px; margin-bottom: 8px; }
 .q-num { font-size: 26px; font-weight: 700; color: var(--text); letter-spacing: -1px; line-height: 1; }
@@ -153,15 +136,15 @@ nav {
 .url-bar {
   background: var(--surface); border-radius: 12px;
   border: 0.5px solid var(--border-strong);
-  padding: 13px 18px;
+  padding: 16px 20px;
   display: flex; align-items: center; gap: 12px;
   backdrop-filter: blur(40px);
 }
 .url-label { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: 0.5px; flex-shrink: 0; }
-.url-text { font-family: var(--font-mono); font-size: 11px; color: var(--accent); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.url-text { font-family: var(--font-mono); font-size: 22px; color: var(--accent); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .copy-btn {
-  flex-shrink: 0; font-size: 12px; font-weight: 500;
-  background: var(--accent); color: #060608;
+  flex-shrink: 0; font-size: 13px; font-weight: 500;
+  background: var(--accent); color: white;
   border: none; border-radius: 8px;
   padding: 6px 14px; cursor: pointer;
   font-family: var(--font-sans); letter-spacing: -0.1px;
@@ -175,7 +158,7 @@ nav {
 .sec-title { font-size: 13px; font-weight: 600; color: var(--text); letter-spacing: -0.2px; }
 .sec-cnt {
   font-size: 10px; font-weight: 600;
-  background: rgba(255,255,255,0.06); color: var(--sub);
+  background: rgba(0,0,0,0.06); color: var(--sub);
   padding: 1px 7px; border-radius: 99px;
 }
 .scroll-row {
@@ -203,7 +186,7 @@ nav {
   background: var(--card-color, var(--accent));
   opacity: 0.7;
 }
-.h-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+.h-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
 .h-card:active { transform: scale(0.98); }
 .h-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
 .h-card-icon { font-size: 20px; }
@@ -212,7 +195,7 @@ nav {
 
 .status { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 5px; letter-spacing: 0.1px; }
 .status.on { background: var(--teal-bg); color: var(--teal); }
-.status.soon { background: rgba(255,255,255,0.05); color: var(--muted); }
+.status.soon { background: rgba(0,0,0,0.05); color: var(--muted); }
 
 .empty-hcard {
   flex-shrink: 0; width: 200px; height: 96px;
@@ -252,10 +235,10 @@ nav {
   background: var(--card-color, var(--accent));
   opacity: 0.7;
 }
-.course-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+.course-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
 .course-card:active { transform: scale(0.98); }
 .course-top { display: flex; justify-content: space-between; align-items: flex-start; }
-.course-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; background: rgba(255,255,255,0.04); border: 0.5px solid var(--border); }
+.course-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; background: var(--surface2); border: 0.5px solid var(--border); }
 .course-name { font-size: 14px; font-weight: 600; color: var(--text); letter-spacing: -0.2px; }
 .course-desc { font-size: 12px; color: var(--sub); line-height: 1.55; flex: 1; }
 
@@ -276,10 +259,10 @@ nav {
   background: var(--card-color, var(--accent));
   opacity: 0.7;
 }
-.proj-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+.proj-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
 .proj-card:active { transform: scale(0.98); }
 .proj-top { display: flex; justify-content: space-between; align-items: flex-start; }
-.proj-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; background: rgba(255,255,255,0.04); border: 0.5px solid var(--border); }
+.proj-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; background: var(--surface2); border: 0.5px solid var(--border); }
 .proj-name { font-size: 14px; font-weight: 600; color: var(--text); letter-spacing: -0.2px; }
 .proj-desc { font-size: 12px; color: var(--sub); line-height: 1.55; }
 .proj-tag {
@@ -292,10 +275,10 @@ nav {
 .access-card {
   background: var(--surface); border: 0.5px solid var(--border-strong);
   border-radius: 16px; padding: 28px;
-  display: flex; gap: 28px; align-items: center; max-width: 500px;
+  display: flex; gap: 28px; align-items: center; max-width: 640px;
   backdrop-filter: blur(40px);
 }
-.access-qr { width: 100px; height: 100px; border-radius: 12px; border: 0.5px solid var(--border-strong); padding: 6px; flex-shrink: 0; background: white; }
+.access-qr { width: 180px; height: 180px; border-radius: 14px; border: 0.5px solid var(--border-strong); padding: 8px; flex-shrink: 0; background: white; }
 .access-qr img { width: 100%; height: 100%; object-fit: contain; border-radius: 6px; display: block; }
 .access-info h2 { font-size: 15px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; margin-bottom: 5px; }
 .access-info p { font-size: 12px; color: var(--sub); margin-bottom: 12px; line-height: 1.6; }
@@ -313,7 +296,7 @@ nav {
   position: absolute;
   bottom: 4px; left: 0; right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(79,255,176,0.06), transparent);
+  background: linear-gradient(90deg, transparent, rgba(0,113,227,0.08), transparent);
 }
 .duck {
   position: absolute;
@@ -414,8 +397,8 @@ nav {
   font-family: var(--font-mono);
   font-size: 13px;
   font-weight: 700;
-  color: #ffca3a;
-  text-shadow: 0 0 8px rgba(255,202,58,0.6);
+  color: #ff9f43;
+  text-shadow: 0 0 8px rgba(255,159,67,0.5);
   pointer-events: none;
   z-index: 10;
   animation: gotcha-pop 1s ease-out forwards;
@@ -428,9 +411,6 @@ nav {
 </style>
 </head>
 <body>
-<div class="bg-grid"></div>
-<div class="bg-glow"><div class="glow-orb glow-1"></div><div class="glow-orb glow-2"></div></div>
-
 <nav>
   <a class="logo" href="#">LEC</a>
   <ul class="tabs">
@@ -455,19 +435,19 @@ nav {
     </div>
 
     <div class="quick-grid">
-      <div class="quick-card" style="--card-color:#4fffb0" onclick="goTab('lectures')">
+      <div class="quick-card" style="--card-color:#0071E3" onclick="goTab('lectures')">
         <span class="q-label">강의</span>
         <span class="q-num" id="quick-course-cnt">0</span>
         <span class="q-unit">등록된 강의</span>
         <span class="q-arrow">자세히 보기 →</span>
       </div>
-      <div class="quick-card" style="--card-color:#c77dff" onclick="goTab('projects')">
+      <div class="quick-card" style="--card-color:#34C759" onclick="goTab('projects')">
         <span class="q-label">프로젝트</span>
         <span class="q-num">4</span>
         <span class="q-unit">바이브 코딩 결과물</span>
         <span class="q-arrow">자세히 보기 →</span>
       </div>
-      <div class="quick-card" style="--card-color:#ffca3a" onclick="goTab('access')">
+      <div class="quick-card" style="--card-color:#FF9F0A" onclick="goTab('access')">
         <span class="q-label">접속 안내</span>
         <span class="q-num" style="font-size:18px; margin-top:4px;">QR · URL</span>
         <span class="q-unit">강의실 바로가기</span>
