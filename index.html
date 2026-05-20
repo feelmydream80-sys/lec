@@ -636,7 +636,7 @@ function buildHomeCards() {
     });
     const add = document.createElement('div');
     add.className = 'h-card';
-    add.style.cssText = 'border-style:dashed;cursor:default;';
+    add.style.cssText = 'border-style:dashed;cursor:default;--card-color:#FFD60A;';
     add.innerHTML = '<div class="h-card-top"><span class="h-card-icon">＋</span><span class="status soon">준비중</span></div><p class="h-card-name">더 많은 강의</p><p class="h-card-desc">새로운 강의가 곧 추가될 예정입니다</p>';
     courseRow.appendChild(add);
   }
@@ -656,7 +656,7 @@ function buildHomeCards() {
   });
   const pAdd = document.createElement('div');
   pAdd.className = 'h-card';
-  pAdd.style.cssText = 'border-style:dashed;cursor:default;';
+  pAdd.style.cssText = 'border-style:dashed;cursor:default;--card-color:#FFD60A;';
   pAdd.innerHTML = '<div class="h-card-top"><span class="h-card-icon">＋</span><span class="status soon">준비중</span></div><p class="h-card-name">더 많은 프로젝트</p><p class="h-card-desc">새로운 프로젝트가 곧 추가될 예정입니다</p>';
   projRow.appendChild(pAdd);
 }
