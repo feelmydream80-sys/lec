@@ -314,30 +314,30 @@ nav {
 .pd-body {
   border-radius: 50%; background: #ffca3a; position: relative;
 }
-.parade-duck.mom .pd-body { width: 32px; height: 22px; }
-.parade-duck.baby .pd-body { width: 20px; height: 14px; }
+.parade-duck.mom .pd-body { width: 40px; height: 28px; }
+.parade-duck.baby .pd-body { width: 26px; height: 18px; }
 .pd-head {
   position: absolute; border-radius: 50%; background: #ffca3a;
 }
-.parade-duck.mom .pd-head { width: 16px; height: 16px; top: -10px; left: 14px; }
-.parade-duck.baby .pd-head { width: 10px; height: 10px; top: -6px; left: 9px; }
+.parade-duck.mom .pd-head { width: 22px; height: 22px; top: -14px; left: 18px; }
+.parade-duck.baby .pd-head { width: 14px; height: 14px; top: -8px; left: 12px; }
 .pd-eye {
   position: absolute; border-radius: 50%; background: #1a1a2e;
 }
-.parade-duck.mom .pd-eye { width: 2.5px; height: 2.5px; top: 4px; left: 10px; }
-.parade-duck.baby .pd-eye { width: 1.5px; height: 1.5px; top: 3px; left: 6px; }
+.parade-duck.mom .pd-eye { width: 3px; height: 3px; top: 5px; left: 13px; }
+.parade-duck.baby .pd-eye { width: 2px; height: 2px; top: 4px; left: 8px; }
 .pd-beak {
   position: absolute; width: 0; height: 0;
-  border-left: 4px solid transparent; border-right: 4px solid transparent;
-  border-bottom: 5px solid #ff9f43;
+  border-left: 5px solid transparent; border-right: 5px solid transparent;
+  border-bottom: 6px solid #ff9f43;
 }
-.parade-duck.mom .pd-beak { top: 6px; left: 24px; }
-.parade-duck.baby .pd-beak { top: 4px; left: 16px; border-left-width: 3px; border-right-width: 3px; border-bottom-width: 3px; }
+.parade-duck.mom .pd-beak { top: 8px; left: 32px; }
+.parade-duck.baby .pd-beak { top: 5px; left: 22px; border-left-width: 3px; border-right-width: 3px; border-bottom-width: 4px; }
 .pd-wing {
   position: absolute; border-radius: 50%; background: rgba(0,0,0,0.06);
 }
-.parade-duck.mom .pd-wing { width: 14px; height: 9px; top: 7px; left: 5px; }
-.parade-duck.baby .pd-wing { width: 9px; height: 6px; top: 4px; left: 3px; }
+.parade-duck.mom .pd-wing { width: 18px; height: 12px; top: 8px; left: 6px; }
+.parade-duck.baby .pd-wing { width: 12px; height: 8px; top: 5px; left: 4px; }
 @keyframes duck-walk {
   0%   { transform: translateX(-100px); opacity: 0; }
   5%   { opacity: 1; }
@@ -369,17 +369,17 @@ nav {
   background: #ffca3a;
   position: relative;
 }
-.hd-body.s { width: 7px; height: 5px; }
-.hd-body.m { width: 9px; height: 6px; }
-.hd-body.l { width: 11px; height: 7px; }
+.hd-body.s { width: 14px; height: 10px; }
+.hd-body.m { width: 18px; height: 13px; }
+.hd-body.l { width: 22px; height: 16px; }
 .hd-head {
   position: absolute;
   border-radius: 50%;
   background: #ffca3a;
 }
-.hd-body.s .hd-head { width: 4px; height: 4px; top: -3px; left: 4px; }
-.hd-body.m .hd-head { width: 5px; height: 5px; top: -4px; left: 5px; }
-.hd-body.l .hd-head { width: 6px; height: 6px; top: -5px; left: 6px; }
+.hd-body.s .hd-head { width: 8px; height: 8px; top: -6px; left: 7px; }
+.hd-body.m .hd-head { width: 10px; height: 10px; top: -7px; left: 9px; }
+.hd-body.l .hd-head { width: 12px; height: 12px; top: -8px; left: 11px; }
 .hd-beak {
   position: absolute;
   width: 0; height: 0;
@@ -387,9 +387,9 @@ nav {
   border-right: 2px solid transparent;
   border-bottom: 3px solid #ff9f43;
 }
-.hd-body.s .hd-beak { top: 1px; left: 7px; border-left-width: 1.5px; border-right-width: 1.5px; border-bottom-width: 2px; }
-.hd-body.m .hd-beak { top: 1px; left: 8px; }
-.hd-body.l .hd-beak { top: 1px; left: 10px; border-left-width: 2.5px; border-right-width: 2.5px; border-bottom-width: 3.5px; }
+.hd-body.s .hd-beak { top: 2px; left: 13px; border-left-width: 2.5px; border-right-width: 2.5px; border-bottom-width: 3px; }
+.hd-body.m .hd-beak { top: 2px; left: 16px; border-left-width: 3px; border-right-width: 3px; border-bottom-width: 3.5px; }
+.hd-body.l .hd-beak { top: 3px; left: 20px; border-left-width: 3.5px; border-right-width: 3.5px; border-bottom-width: 4px; }
 .hd-found {
   display: none;
   font-size: 16px;
@@ -672,16 +672,16 @@ buildProjectGrid();
 
 // Hidden ducks — 1 mom + 9 babies, all hidden, found → parade
 const hiddenDucks = [
-  { top: '8%', left: '6%', size: 's', op: 0.18 },
-  { top: '14%', right: '8%', size: 'm', op: 0.14 },
-  { top: '24%', left: '2%', size: 's', op: 0.2 },
-  { top: '32%', right: '4%', size: 's', op: 0.16 },
-  { top: '20%', left: '45%', size: 'm', op: 0.12 },
-  { top: '42%', left: '15%', size: 's', op: 0.18 },
-  { top: '50%', right: '10%', size: 'l', op: 0.14 },
-  { top: '60%', left: '6%', size: 'm', op: 0.16 },
-  { top: '68%', right: '12%', size: 's', op: 0.2 },
-  { bottom: '12%', left: '20%', size: 's', op: 0.22 },
+  { top: '8%', left: '6%', size: 's', op: 0.45 },
+  { top: '14%', right: '8%', size: 'm', op: 0.38 },
+  { top: '24%', left: '2%', size: 's', op: 0.5 },
+  { top: '32%', right: '4%', size: 's', op: 0.4 },
+  { top: '20%', left: '45%', size: 'm', op: 0.35 },
+  { top: '42%', left: '15%', size: 's', op: 0.45 },
+  { top: '50%', right: '10%', size: 'l', op: 0.35 },
+  { top: '60%', left: '6%', size: 'm', op: 0.4 },
+  { top: '68%', right: '12%', size: 's', op: 0.5 },
+  { bottom: '12%', left: '20%', size: 's', op: 0.55 },
 ];
 // index 0 = mom (l), rest = babies
 hiddenDucks[6].size = 'l';
