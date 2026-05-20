@@ -872,6 +872,7 @@ let currentChar = 0;
 let reciteTimer = null;
 let gameDuckPositions = [];
 let activeDuckIndices = [];
+let checkTimer = null;
 
 function getSlotLeft(idx) { return SLOT_BASE + idx * SLOT_GAP; }
 
@@ -922,7 +923,7 @@ function reciteNextChar() {
     gameState = 'CHECKING';
     gameHintEl.textContent = '뗏!';
     gameHintEl.className = 'game-hint danger';
-    setTimeout(() => {
+    checkTimer = setTimeout(() => {
       if (spaceHeld) {
         catchDuck();
       } else {
@@ -948,7 +949,7 @@ function reciteNextChar() {
   gameHintEl.textContent = '⬆';
   gameHintEl.className = 'game-hint active';
   currentChar++;
-  reciteTimer = setTimeout(reciteNextChar, Math.random() * 500);
+  reciteTimer = setTimeout(reciteNextChar, Math.random() * 200);
 }
 
 function catchDuck() {
@@ -969,19 +970,23 @@ function catchDuck() {
   gameHintEl.textContent = '걸렸다! 😭';
   gameHintEl.className = 'game-hint danger';
   if (caughtIdx === 0) {
-    setTimeout(gameOver, 1200);
+    setTimeout(() => { if (gameState === 'CAUGHT') gameOver(); }, 1200);
   } else {
     setTimeout(() => {
-      gamePhraseEl.innerHTML = '';
-      gameHintEl.textContent = '';
-      gameHintEl.className = 'game-hint';
-      startReciting();
+      if (gameState === 'CAUGHT') {
+        gamePhraseEl.innerHTML = '';
+        gameHintEl.textContent = '';
+        gameHintEl.className = 'game-hint';
+        startReciting();
+      }
     }, 1500);
   }
 }
 
 function gameWin() {
   if (gameState === 'WIN' || gameState === 'GAME_OVER') return;
+  clearTimeout(reciteTimer);
+  clearTimeout(checkTimer);
   gameState = 'WIN';
   gameStatusEl.textContent = '🦆 집에 잘 들어갔습니다! 🏠';
   gameStatusEl.className = 'game-status show';
@@ -992,6 +997,8 @@ function gameWin() {
 }
 
 function gameOver() {
+  clearTimeout(reciteTimer);
+  clearTimeout(checkTimer);
   gameState = 'GAME_OVER';
   gameStatusEl.textContent = 'GAME OVER';
   gameStatusEl.className = 'game-status show';
