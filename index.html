@@ -301,56 +301,58 @@ nav {
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(0,113,227,0.08), transparent);
 }
-.duck {
+.parade-duck {
   position: absolute;
   bottom: 4px;
-  animation: duck-walk 16s linear infinite;
+  animation: duck-walk 18s linear infinite;
 }
-.duck.mom   { animation-delay: -11s; z-index: 4; }
-.duck.baby1 { animation-delay: -8s;  z-index: 3; }
-.duck.baby2 { animation-delay: -5s;  z-index: 2; }
-.duck.baby3 { animation-delay: -2s;  z-index: 1; }
-.duck-inner { animation: duck-bob 0.6s ease-in-out infinite; }
-.duck.mom   .duck-inner { animation-delay: 0s; }
-.duck.baby1 .duck-inner { animation-delay: 0.15s; }
-.duck.baby2 .duck-inner { animation-delay: 0.35s; }
-.duck.baby3 .duck-inner { animation-delay: 0.5s; }
-.duck-body {
+.parade-duck .pd-inner { animation: duck-bob 0.6s ease-in-out infinite; }
+.parade-duck.entering .pd-inner { animation: none; }
+.parade-duck.entering {
+  animation: duck-enter 0.5s ease-out forwards;
+}
+.pd-body {
   border-radius: 50%; background: #ffca3a; position: relative;
 }
-.duck.mom .duck-body { width: 32px; height: 22px; }
-.duck.baby .duck-body { width: 20px; height: 14px; }
-.duck-head {
+.parade-duck.mom .pd-body { width: 32px; height: 22px; }
+.parade-duck.baby .pd-body { width: 20px; height: 14px; }
+.pd-head {
   position: absolute; border-radius: 50%; background: #ffca3a;
 }
-.duck.mom .duck-head { width: 16px; height: 16px; top: -10px; left: 14px; }
-.duck.baby .duck-head { width: 10px; height: 10px; top: -6px; left: 9px; }
-.duck-eye {
+.parade-duck.mom .pd-head { width: 16px; height: 16px; top: -10px; left: 14px; }
+.parade-duck.baby .pd-head { width: 10px; height: 10px; top: -6px; left: 9px; }
+.pd-eye {
   position: absolute; border-radius: 50%; background: #1a1a2e;
 }
-.duck.mom .duck-eye { width: 2.5px; height: 2.5px; top: 4px; left: 10px; }
-.duck.baby .duck-eye { width: 1.5px; height: 1.5px; top: 3px; left: 6px; }
-.duck-beak {
+.parade-duck.mom .pd-eye { width: 2.5px; height: 2.5px; top: 4px; left: 10px; }
+.parade-duck.baby .pd-eye { width: 1.5px; height: 1.5px; top: 3px; left: 6px; }
+.pd-beak {
   position: absolute; width: 0; height: 0;
   border-left: 4px solid transparent; border-right: 4px solid transparent;
   border-bottom: 5px solid #ff9f43;
 }
-.duck.mom .duck-beak { top: 6px; left: 24px; }
-.duck.baby .duck-beak { top: 4px; left: 16px; border-left-width: 3px; border-right-width: 3px; border-bottom-width: 3px; }
-.duck-wing {
+.parade-duck.mom .pd-beak { top: 6px; left: 24px; }
+.parade-duck.baby .pd-beak { top: 4px; left: 16px; border-left-width: 3px; border-right-width: 3px; border-bottom-width: 3px; }
+.pd-wing {
   position: absolute; border-radius: 50%; background: rgba(0,0,0,0.06);
 }
-.duck.mom .duck-wing { width: 14px; height: 9px; top: 7px; left: 5px; }
-.duck.baby .duck-wing { width: 9px; height: 6px; top: 4px; left: 3px; }
+.parade-duck.mom .pd-wing { width: 14px; height: 9px; top: 7px; left: 5px; }
+.parade-duck.baby .pd-wing { width: 9px; height: 6px; top: 4px; left: 3px; }
 @keyframes duck-walk {
   0%   { transform: translateX(-100px); opacity: 0; }
-  6%   { opacity: 1; }
-  85%  { opacity: 1; }
+  5%   { opacity: 1; }
+  90%  { opacity: 1; }
   100% { transform: translateX(calc(100% + 50px)); opacity: 0; }
 }
 @keyframes duck-bob {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-3px); }
+}
+@keyframes duck-enter {
+  0%   { transform: scale(3); opacity: 0; }
+  40%  { transform: scale(0.75); opacity: 1; }
+  70%  { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 /* HIDDEN DUCKS */
@@ -484,50 +486,6 @@ nav {
 
     <div class="duck-scene">
       <div class="ground-line"></div>
-      <div class="duck mom">
-        <div class="duck-inner">
-          <div class="duck-body">
-            <div class="duck-wing"></div>
-            <div class="duck-head">
-              <div class="duck-eye"></div>
-              <div class="duck-beak"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="duck baby baby1">
-        <div class="duck-inner">
-          <div class="duck-body">
-            <div class="duck-wing"></div>
-            <div class="duck-head">
-              <div class="duck-eye"></div>
-              <div class="duck-beak"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="duck baby baby2">
-        <div class="duck-inner">
-          <div class="duck-body">
-            <div class="duck-wing"></div>
-            <div class="duck-head">
-              <div class="duck-eye"></div>
-              <div class="duck-beak"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="duck baby baby3">
-        <div class="duck-inner">
-          <div class="duck-body">
-            <div class="duck-wing"></div>
-            <div class="duck-head">
-              <div class="duck-eye"></div>
-              <div class="duck-beak"></div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
   </div>
@@ -712,23 +670,28 @@ buildHomeCards();
 buildLectureGrid();
 buildProjectGrid();
 
-// Hidden ducks
-const container = document.querySelector('.pages');
+// Hidden ducks — 1 mom + 9 babies, all hidden, found → parade
 const hiddenDucks = [
-  { top: '10%', left: '6%', size: 's', op: 0.14 },
-  { top: '16%', right: '12%', size: 's', op: 0.18 },
-  { top: '28%', left: '3%', size: 'm', op: 0.12 },
-  { top: '36%', right: '5%', size: 's', op: 0.2 },
-  { top: '48%', left: '12%', size: 'l', op: 0.12 },
-  { top: '55%', right: '3%', size: 'm', op: 0.16 },
-  { top: '63%', left: '7%', size: 's', op: 0.14 },
-  { top: '72%', right: '15%', size: 'm', op: 0.18 },
-  { top: '82%', left: '35%', size: 'l', op: 0.13 },
-  { bottom: '10%', left: '12%', size: 's', op: 0.22 },
+  { top: '8%', left: '6%', size: 's', op: 0.18 },
+  { top: '14%', right: '8%', size: 'm', op: 0.14 },
+  { top: '24%', left: '2%', size: 's', op: 0.2 },
+  { top: '32%', right: '4%', size: 's', op: 0.16 },
+  { top: '20%', left: '45%', size: 'm', op: 0.12 },
+  { top: '42%', left: '15%', size: 's', op: 0.18 },
+  { top: '50%', right: '10%', size: 'l', op: 0.14 },
+  { top: '60%', left: '6%', size: 'm', op: 0.16 },
+  { top: '68%', right: '12%', size: 's', op: 0.2 },
+  { bottom: '12%', left: '20%', size: 's', op: 0.22 },
 ];
+// index 0 = mom (l), rest = babies
+hiddenDucks[6].size = 'l';
+
+const container = document.querySelector('.pages');
+const paradeScene = document.querySelector('.duck-scene');
 let foundCount = 0;
 
-hiddenDucks.forEach((d) => {
+
+hiddenDucks.forEach((d, i) => {
   const duck = document.createElement('div');
   duck.className = 'hidden-duck';
   const style = 'position:absolute;z-index:5;cursor:pointer;opacity:' + d.op + ';transition:opacity 0.3s;';
@@ -755,23 +718,40 @@ hiddenDucks.forEach((d) => {
       particleCount: 40,
       spread: 50,
       origin: { x: cx / window.innerWidth, y: cy / window.innerHeight },
-      colors: ['#ffca3a', '#ff9f43', '#4fffb0', '#48dbfb', '#ff6b6b'],
+      colors: ['#ffca3a', '#ff9f43', '#0db7ed', '#34C759', '#ff6b6b'],
       ticks: 60
     });
 
     const txt = document.createElement('div');
     txt.className = 'gotcha-text';
-    txt.textContent = '걸렸다!';
+    txt.textContent = '찾았다!';
     txt.style.left = rect.left + 'px';
     txt.style.top = (rect.top - 10) + 'px';
     document.body.appendChild(txt);
     setTimeout(() => txt.remove(), 1000);
 
+    // add to parade
+    const isMom = i === 0;
+    const pd = document.createElement('div');
+    pd.className = 'parade-duck entering' + (isMom ? ' mom' : ' baby');
+    pd.style.zIndex = 10 - foundCount;
+    pd.innerHTML =
+      '<div class="pd-inner">' +
+        '<div class="pd-body"><div class="pd-wing"></div><div class="pd-head"><div class="pd-eye"></div><div class="pd-beak"></div></div></div>' +
+      '</div>';
+    paradeScene.appendChild(pd);
+
+    // after enter animation, switch to walking with staggered delay
+    setTimeout(() => {
+      pd.classList.remove('entering');
+      pd.style.animationDelay = -(foundCount * 1.8) + 's';
+    }, 500);
+
     if (foundCount === hiddenDucks.length) {
       setTimeout(() => {
-        confetti({ particleCount: 150, spread: 100, origin: { x: 0.5, y: 0.3 } });
-        confetti({ particleCount: 150, spread: 100, origin: { x: 0.5, y: 0.7 } });
-      }, 500);
+        confetti({ particleCount: 200, spread: 120, origin: { x: 0.5, y: 0.3 } });
+        confetti({ particleCount: 200, spread: 120, origin: { x: 0.5, y: 0.7 } });
+      }, 600);
     }
   });
 
