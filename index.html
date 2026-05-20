@@ -399,6 +399,8 @@ nav {
 }
 .hidden-duck.found .hd-body { display: none; }
 .hidden-duck.found .hd-found { display: block; }
+.hidden-duck.found.vanish { opacity: 0; transition: opacity 0.5s; }
+.hidden-duck.found.vanish .hd-found { display: none; }
 .gotcha-text {
   position: absolute;
   font-family: var(--font-mono);
@@ -770,6 +772,11 @@ hiddenDucks.forEach((d, i) => {
         confetti({ particleCount: 200, spread: 120, origin: { x: 0.5, y: 0.7 } });
       }, 600);
     }
+
+    // vanish the found icon after a moment
+    const hd = this;
+    setTimeout(() => { hd.classList.add('vanish'); }, 1500);
+    setTimeout(() => { if (hd.parentNode) hd.parentNode.removeChild(hd); }, 2000);
   });
 
   container.appendChild(duck);
