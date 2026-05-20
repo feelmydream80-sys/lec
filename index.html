@@ -304,12 +304,20 @@ nav {
 .parade-duck {
   position: absolute;
   bottom: 4px;
-  animation: duck-walk 18s linear infinite;
 }
 .parade-duck .pd-inner { animation: duck-bob 0.6s ease-in-out infinite; }
 .parade-duck.entering .pd-inner { animation: none; }
 .parade-duck.entering {
   animation: duck-enter 0.5s ease-out forwards;
+}
+.parade-duck.walking {
+  animation: parade-walk 20s linear infinite;
+}
+@keyframes parade-walk {
+  0%   { transform: translateX(0); opacity: 0; }
+  3%   { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateX(calc(100vw + 200px)); opacity: 0; }
 }
 .pd-body {
   border-radius: 50%; background: #ffca3a; position: relative;
@@ -338,12 +346,6 @@ nav {
 }
 .parade-duck.mom .pd-wing { width: 18px; height: 12px; top: 8px; left: 6px; }
 .parade-duck.baby .pd-wing { width: 12px; height: 8px; top: 5px; left: 4px; }
-@keyframes duck-walk {
-  0%   { transform: translateX(-100px); opacity: 0; }
-  5%   { opacity: 1; }
-  90%  { opacity: 1; }
-  100% { transform: translateX(calc(100% + 50px)); opacity: 0; }
-}
 @keyframes duck-bob {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-3px); }
@@ -670,7 +672,7 @@ buildHomeCards();
 buildLectureGrid();
 buildProjectGrid();
 
-// Hidden ducks — 1 mom + 9 babies, all hidden, found → parade
+// Hidden ducks — 1 mom + 9 babies. Found → enter slot → wait → mom triggers parade
 const hiddenDucks = [
   { top: '8%', left: '6%', size: 's', op: 0.45 },
   { top: '14%', right: '8%', size: 'm', op: 0.38 },
@@ -689,7 +691,7 @@ hiddenDucks[6].size = 'l';
 const container = document.querySelector('.pages');
 const paradeScene = document.querySelector('.duck-scene');
 let foundCount = 0;
-
+let paradeStarted = false;
 
 hiddenDucks.forEach((d, i) => {
   const duck = document.createElement('div');
@@ -730,22 +732,37 @@ hiddenDucks.forEach((d, i) => {
     document.body.appendChild(txt);
     setTimeout(() => txt.remove(), 1000);
 
-    // add to parade
+    // place in parade slot (mom slot 0 at left, babies spaced right)
     const isMom = i === 0;
+    const slotPos = 10 + i * 38;
     const pd = document.createElement('div');
     pd.className = 'parade-duck entering' + (isMom ? ' mom' : ' baby');
-    pd.style.zIndex = 10 - foundCount;
+    pd.style.left = slotPos + 'px';
+    pd.style.zIndex = 10 - i;
     pd.innerHTML =
       '<div class="pd-inner">' +
         '<div class="pd-body"><div class="pd-wing"></div><div class="pd-head"><div class="pd-eye"></div><div class="pd-beak"></div></div></div>' +
       '</div>';
     paradeScene.appendChild(pd);
 
-    // after enter animation, switch to walking with staggered delay
+    // after enter animation → waiting state
     setTimeout(() => {
       pd.classList.remove('entering');
-      pd.style.animationDelay = -(foundCount * 1.8) + 's';
+      pd.classList.add('waiting');
     }, 500);
+
+    // if mom found → start the parade
+    if (isMom) {
+      setTimeout(() => {
+        paradeStarted = true;
+        const waiting = paradeScene.querySelectorAll('.parade-duck.waiting');
+        waiting.forEach((p, idx) => {
+          p.classList.remove('waiting');
+          p.classList.add('walking');
+          p.style.animationDelay = (idx * 0.3) + 's';
+        });
+      }, 700);
+    }
 
     if (foundCount === hiddenDucks.length) {
       setTimeout(() => {
