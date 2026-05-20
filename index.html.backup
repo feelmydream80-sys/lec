@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LEC 강의실</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<style>
+:root {
+  --bg: #060608;
+  --surface: rgba(255,255,255,0.03);
+  --border: rgba(255,255,255,0.07);
+  --text: #f0f0f0;
+  --muted: rgba(255,255,255,0.35);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.bg-grid {
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+  z-index: 0;
+}
+.bg-glow {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+}
+.glow-orb {
+  position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.1;
+}
+.glow-1 { width: 500px; height: 500px; top: -150px; left: -150px; background: #4fffb0; }
+.glow-2 { width: 400px; height: 400px; bottom: -150px; right: -150px; background: #c77dff; }
+.container {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 1100px;
+  padding: 60px 32px 80px;
+}
+.header {
+  text-align: center; margin-bottom: 56px;
+}
+.header h1 {
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 900; letter-spacing: -0.03em;
+  margin-bottom: 8px;
+}
+.header h1 span { color: #4fffb0; }
+.header p {
+  font-size: 15px; color: var(--muted);
+  font-weight: 300; letter-spacing: 0.05em;
+}
+.header .count-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 16px;
+  padding: 5px 14px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: 0.18em;
+  color: var(--muted);
+}
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+  justify-content: center;
+}
+.course-card {
+  background: rgba(12,12,16,0.85);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px 28px 28px;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(40px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.course-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 28px; right: 28px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent, #4fffb0), transparent);
+  opacity: 0.5;
+}
+.course-card:hover {
+  border-color: rgba(255,255,255,0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 20px 40px rgba(0,0,0,0.4);
+}
+.course-card:active {
+  transform: translateY(-1px);
+}
+.card-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  margin-bottom: 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+}
+.card-title {
+  font-size: 20px; font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+.card-sub {
+  font-size: 13px; color: var(--muted);
+  font-weight: 300; line-height: 1.6;
+  flex: 1;
+  margin-bottom: 20px;
+}
+.card-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  align-self: center;
+  padding: 8px 20px;
+  border-radius: 4px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px; letter-spacing: 0.12em;
+  background: var(--accent, #4fffb0);
+  color: #060608;
+  border: none;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+}
+.course-card:hover .card-btn {
+  box-shadow: 0 0 24px rgba(var(--accent-rgb, 79,255,176), 0.3);
+}
+.card-bg-num {
+  position: absolute;
+  bottom: -8px; right: 20px;
+  font-family: 'Space Mono', monospace;
+  font-size: 100px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.02);
+  line-height: 1;
+  pointer-events: none;
+  letter-spacing: -0.05em;
+}
+.lecture-section {
+  margin-top: 8px;
+}
+.lecture-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.lecture-header h2 {
+  font-size: clamp(22px, 3.5vw, 36px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+.lecture-header h2 span { color: #4fffb0; }
+.lecture-header p {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 300;
+}
+.project-section {
+  margin-top: 56px;
+}
+.project-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.project-header h2 {
+  font-size: clamp(22px, 3.5vw, 36px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+.project-header h2 span { color: #48dbfb; }
+.project-header p {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 300;
+}
+.project-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.card-tag {
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+  padding: 8px 20px;
+  border-radius: 4px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.4);
+  border: 1px solid var(--border);
+  text-transform: uppercase;
+}
+.card-inner-1 { animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) both; animation-delay: 0.08s; }
+.card-inner-2 { animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) both; animation-delay: 0.18s; }
+.card-inner-3 { animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) both; animation-delay: 0.3s; }
+.card-inner-4 { animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) both; animation-delay: 0.44s; }
+.url-section {
+  text-align: center;
+  margin-top: 48px;
+}
+.url-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.url-box {
+  display: inline-flex;
+  padding: 14px 32px;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(79,255,176,0.25);
+  border-left: 4px solid #4fffb0;
+  border-radius: 10px;
+  box-shadow: 0 0 40px rgba(79,255,176,0.06);
+}
+.url-text {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(16px, 2.5vw, 24px);
+  font-weight: 700;
+  color: #4fffb0;
+  letter-spacing: 0.02em;
+}
+.qr-img {
+  display: block;
+  margin: 16px auto 0;
+  width: 180px;
+  height: 180px;
+  border-radius: 12px;
+  border: 2px solid rgba(255,255,255,0.15);
+  background: white;
+  padding: 8px;
+  opacity: 1;
+  transition: transform 0.2s;
+}
+.qr-img:hover { transform: scale(1.05); }
+.duck-scene {
+  position: relative;
+  width: 100%;
+  height: 56px;
+  margin-top: 32px;
+  overflow: hidden;
+}
+.ground-line {
+  position: absolute;
+  bottom: 4px; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(79,255,176,0.06), transparent);
+}
+.duck {
+  position: absolute;
+  bottom: 4px;
+  animation: duck-walk 16s linear infinite;
+}
+.duck.mom   { animation-delay: -11s; z-index: 4; }
+.duck.baby1 { animation-delay: -8s;  z-index: 3; }
+.duck.baby2 { animation-delay: -5s;  z-index: 2; }
+.duck.baby3 { animation-delay: -2s;  z-index: 1; }
+.duck-inner { animation: duck-bob 0.6s ease-in-out infinite; }
+.duck.mom   .duck-inner { animation-delay: 0s; }
+.duck.baby1 .duck-inner { animation-delay: 0.15s; }
+.duck.baby2 .duck-inner { animation-delay: 0.35s; }
+.duck.baby3 .duck-inner { animation-delay: 0.5s; }
+.duck-body {
+  border-radius: 50%; background: #ffca3a; position: relative;
+}
+.duck.mom .duck-body { width: 32px; height: 22px; }
+.duck.baby .duck-body { width: 20px; height: 14px; }
+.duck-head {
+  position: absolute; border-radius: 50%; background: #ffca3a;
+}
+.duck.mom .duck-head { width: 16px; height: 16px; top: -10px; left: 14px; }
+.duck.baby .duck-head { width: 10px; height: 10px; top: -6px; left: 9px; }
+.duck-eye {
+  position: absolute; border-radius: 50%; background: #1a1a2e;
+}
+.duck.mom .duck-eye { width: 2.5px; height: 2.5px; top: 4px; left: 10px; }
+.duck.baby .duck-eye { width: 1.5px; height: 1.5px; top: 3px; left: 6px; }
+.duck-beak {
+  position: absolute; width: 0; height: 0;
+  border-left: 4px solid transparent; border-right: 4px solid transparent;
+  border-bottom: 5px solid #ff9f43;
+}
+.duck.mom .duck-beak { top: 6px; left: 24px; }
+.duck.baby .duck-beak { top: 4px; left: 16px; border-left-width: 3px; border-right-width: 3px; border-bottom-width: 3px; }
+.duck-wing {
+  position: absolute; border-radius: 50%; background: rgba(0,0,0,0.06);
+}
+.duck.mom .duck-wing { width: 14px; height: 9px; top: 7px; left: 5px; }
+.duck.baby .duck-wing { width: 9px; height: 6px; top: 4px; left: 3px; }
+@keyframes duck-walk {
+  0%   { transform: translateX(-100px); opacity: 0; }
+  6%   { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { transform: translateX(calc(100% + 50px)); opacity: 0; }
+}
+@keyframes duck-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+.footer {
+  text-align: center;
+  margin-top: 20px;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: rgba(255,255,255,0.12);
+  letter-spacing: 0.15em;
+}
+.hidden-duck {
+  position: absolute;
+  cursor: pointer;
+  z-index: 5;
+  transition: opacity 0.4s;
+}
+.hidden-duck:hover { opacity: 0.5 !important; }
+.hidden-duck.found { pointer-events: none; z-index: 6; }
+.hd-body {
+  border-radius: 50%;
+  background: #ffca3a;
+  position: relative;
+}
+.hd-body.s { width: 7px; height: 5px; }
+.hd-body.m { width: 9px; height: 6px; }
+.hd-body.l { width: 11px; height: 7px; }
+.hd-head {
+  position: absolute;
+  border-radius: 50%;
+  background: #ffca3a;
+}
+.hd-body.s .hd-head { width: 4px; height: 4px; top: -3px; left: 4px; }
+.hd-body.m .hd-head { width: 5px; height: 5px; top: -4px; left: 5px; }
+.hd-body.l .hd-head { width: 6px; height: 6px; top: -5px; left: 6px; }
+.hd-beak {
+  position: absolute;
+  width: 0; height: 0;
+  border-left: 2px solid transparent;
+  border-right: 2px solid transparent;
+  border-bottom: 3px solid #ff9f43;
+}
+.hd-body.s .hd-beak { top: 1px; left: 7px; border-left-width: 1.5px; border-right-width: 1.5px; border-bottom-width: 2px; }
+.hd-body.m .hd-beak { top: 1px; left: 8px; }
+.hd-body.l .hd-beak { top: 1px; left: 10px; border-left-width: 2.5px; border-right-width: 2.5px; border-bottom-width: 3.5px; }
+.hd-found {
+  display: none;
+  font-size: 16px;
+  transform: translate(-50%, -50%);
+}
+.hidden-duck.found .hd-body { display: none; }
+.hidden-duck.found .hd-found { display: block; }
+.gotcha-text {
+  position: absolute;
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffca3a;
+  text-shadow: 0 0 8px rgba(255,202,58,0.6);
+  pointer-events: none;
+  z-index: 10;
+  animation: gotcha-pop 1s ease-out forwards;
+}
+@keyframes gotcha-pop {
+  0%   { opacity: 1; transform: translateY(0) scale(0.5); }
+  40%  { opacity: 1; transform: translateY(-24px) scale(1.3); }
+  100% { opacity: 0; transform: translateY(-60px) scale(0.8); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.anim { animation: fadeUp 0.6s cubic-bezier(0.22,1,0.36,1) both; }
+.anim-1 { animation-delay: 0.05s; }
+.anim-2 { animation-delay: 0.12s; }
+.anim-3 { animation-delay: 0.2s; }
+.anim-4 { animation-delay: 0.3s; }
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-glow"><div class="glow-orb glow-1"></div><div class="glow-orb glow-2"></div></div>
+<div class="container">
+  <div class="header anim anim-1">
+    <h1><span>LEC</span> 강의실</h1>
+    <p>AI 시대, 당신의 아이디어를 현실로 만드는 강의들</p>
+    <div class="count-badge">📚 총 <span id="course-count">0</span>개 강의</div>
+  </div>
+  <div class="lecture-section anim anim-2">
+    <div class="lecture-header">
+      <h2><span>강의</span> 소개</h2>
+      <p>AI 시대, 당신의 아이디어를 현실로 만드는 강의들</p>
+    </div>
+    <div class="course-grid" id="course-grid"></div>
+  </div>
+  <div class="project-section anim anim-3">
+    <div class="project-header">
+      <h2><span>프로젝트</span> 소개</h2>
+      <p>바이브 코딩으로 만든 다양한 프로젝트들</p>
+    </div>
+    <div class="project-grid" id="project-grid"></div>
+  </div>
+  <div class="url-section anim anim-4">
+    <div class="url-label">강의 접속 주소</div>
+    <div class="url-box">
+      <span class="url-text">https://feelmydream80-sys.github.io/lec/</span>
+    </div>
+    <img src="28qiO.jpg" alt="QR" class="qr-img">
+  </div>
+  <div class="duck-scene">
+    <div class="ground-line"></div>
+    <div class="duck mom">
+      <div class="duck-inner">
+        <div class="duck-body">
+          <div class="duck-wing"></div>
+          <div class="duck-head">
+            <div class="duck-eye"></div>
+            <div class="duck-beak"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="duck baby baby1">
+      <div class="duck-inner">
+        <div class="duck-body">
+          <div class="duck-wing"></div>
+          <div class="duck-head">
+            <div class="duck-eye"></div>
+            <div class="duck-beak"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="duck baby baby2">
+      <div class="duck-inner">
+        <div class="duck-body">
+          <div class="duck-wing"></div>
+          <div class="duck-head">
+            <div class="duck-eye"></div>
+            <div class="duck-beak"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="duck baby baby3">
+      <div class="duck-inner">
+        <div class="duck-body">
+          <div class="duck-wing"></div>
+          <div class="duck-head">
+            <div class="duck-eye"></div>
+            <div class="duck-beak"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">© 2026 LEC</div>
+</div>
+<script>
+const courses = [
+  {
+    folder: 'ViveCodingIntro',
+    name: 'Vibe Coding 입문',
+    desc: 'AI에게 말로 지시해서 앱을 만드는<br>새로운 개발 패러다임을 배웁니다',
+    accent: '#4fffb0',
+    accentRgb: '79,255,176',
+    icon: '🎯'
+  },
+  {
+    folder: 'KidsSafty',
+    name: 'Kids Safe AI',
+    desc: '어린이를 위한 안전한 AI 활용 교육.<br>AI의 위험성과 올바른 사용법을 알아봅니다',
+    accent: '#ff6b6b',
+    accentRgb: '255,107,107',
+    icon: '🛡️'
+  },
+];
+
+document.getElementById('course-count').textContent = courses.length;
+
+const grid = document.getElementById('course-grid');
+courses.forEach((c, i) => {
+  const card = document.createElement('a');
+  card.href = c.folder + '/';
+  card.className = 'course-card anim anim-' + Math.min(i + 1, 4);
+  card.style.setProperty('--accent', c.accent);
+  card.style.setProperty('--accent-rgb', c.accentRgb);
+  card.innerHTML =
+    '<div class="card-bg-num">' + String(i + 1).padStart(2, '0') + '</div>' +
+    '<div class="card-icon card-inner-1">' + c.icon + '</div>' +
+    '<div class="card-title card-inner-2" style="color:' + c.accent + '">' + c.name + '</div>' +
+    '<div class="card-sub card-inner-3">' + c.desc + '</div>' +
+    '<div class="card-btn card-inner-4" style="background:' + c.accent + '">시작하기 ▶</div>';
+  grid.appendChild(card);
+});
+
+const projects = [
+  {
+    name: 'Power Papers',
+    desc: '전력·에너지 최신 arXiv 논문을 한국어 요약과 함께 큐레이션',
+    url: 'https://feelmydream.pythonanywhere.com/',
+    accent: '#4fffb0',
+    icon: '⚡',
+    tag: 'Python · Flask'
+  },
+  {
+    name: '상산고 급식 영양 분석',
+    desc: '박민수 학생 작품 — AI로 급식 메뉴의 영양 성분 분석',
+    url: 'https://feelmydream80-sys.github.io/sangsan_meal/',
+    accent: '#ffca3a',
+    icon: '🍱',
+    tag: 'HTML · CSS · JS'
+  },
+  {
+    name: 'Kids Safe AI',
+    desc: 'AI로 아이 안전을 지키는 스마트 안전 지킴이 앱',
+    url: 'https://feelmydream80-sys.github.io/kidssaft/',
+    accent: '#ff6b6b',
+    icon: '🛡️',
+    tag: 'Python'
+  },
+  {
+    name: 'EMF Calculator',
+    desc: '전자파 수치를 계산하는 웹 기반 전자파 계산기',
+    url: 'https://feelmydream80-sys.github.io/EMF-Calculator/',
+    accent: '#c77dff',
+    icon: '🧮',
+    tag: 'JavaScript · HTML'
+  }
+];
+
+const pgrid = document.getElementById('project-grid');
+projects.forEach((p) => {
+  const card = document.createElement('a');
+  card.href = p.url;
+  card.target = '_blank';
+  card.rel = 'noopener';
+  card.className = 'course-card anim anim-4';
+  card.style.setProperty('--accent', p.accent);
+  card.innerHTML =
+    '<div class="card-icon card-inner-1" style="color:' + p.accent + '">' + p.icon + '</div>' +
+    '<div class="card-title card-inner-2" style="color:' + p.accent + '">' + p.name + '</div>' +
+    '<div class="card-sub card-inner-3">' + p.desc + '</div>' +
+    '<div class="card-tag card-inner-4">' + p.tag + '</div>';
+  pgrid.appendChild(card);
+});
+
+const hiddenDucks = [
+  { top: '10%', left: '6%', size: 's', op: 0.14 },
+  { top: '16%', right: '12%', size: 's', op: 0.18 },
+  { top: '28%', left: '3%', size: 'm', op: 0.12 },
+  { top: '36%', right: '5%', size: 's', op: 0.2 },
+  { top: '48%', left: '12%', size: 'l', op: 0.12 },
+  { top: '55%', right: '3%', size: 'm', op: 0.16 },
+  { top: '63%', left: '7%', size: 's', op: 0.14 },
+  { top: '72%', right: '15%', size: 'm', op: 0.18 },
+  { top: '82%', left: '35%', size: 'l', op: 0.13 },
+  { bottom: '10%', left: '12%', size: 's', op: 0.22 },
+];
+
+const container = document.querySelector('.container');
+let foundCount = 0;
+
+hiddenDucks.forEach((d, i) => {
+  const duck = document.createElement('div');
+  duck.className = 'hidden-duck';
+  const style = `position:absolute;z-index:5;cursor:pointer;opacity:${d.op};transition:opacity 0.3s;`;
+  const pos = [];
+  if (d.top !== undefined) pos.push('top:' + d.top);
+  if (d.left !== undefined) pos.push('left:' + d.left);
+  if (d.right !== undefined) pos.push('right:' + d.right);
+  if (d.bottom !== undefined) pos.push('bottom:' + d.bottom);
+  duck.setAttribute('style', style + pos.join(';'));
+  duck.innerHTML =
+    '<div class="hd-body ' + d.size + '"><div class="hd-head"><div class="hd-beak"></div></div></div>' +
+    '<div class="hd-found">😵</div>';
+  
+  duck.addEventListener('click', function(e) {
+    if (this.classList.contains('found')) return;
+    this.classList.add('found');
+    foundCount++;
+    
+    const rect = this.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    
+    confetti({
+      particleCount: 40,
+      spread: 50,
+      origin: { x: cx / window.innerWidth, y: cy / window.innerHeight },
+      colors: ['#ffca3a', '#ff9f43', '#4fffb0', '#48dbfb', '#ff6b6b'],
+      ticks: 60
+    });
+    
+    const txt = document.createElement('div');
+    txt.className = 'gotcha-text';
+    txt.textContent = '걸렸다!';
+    txt.style.left = rect.left + 'px';
+    txt.style.top = (rect.top - 10) + 'px';
+    document.body.appendChild(txt);
+    setTimeout(() => txt.remove(), 1000);
+    
+    if (foundCount === hiddenDucks.length) {
+      setTimeout(() => {
+        confetti({ particleCount: 150, spread: 100, origin: { x: 0.5, y: 0.3 } });
+        confetti({ particleCount: 150, spread: 100, origin: { x: 0.5, y: 0.7 } });
+      }, 500);
+    }
+  });
+  
+  container.appendChild(duck);
+});
+</script>
+</body>
+</html>

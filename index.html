@@ -4,25 +4,34 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LEC 강의실</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
+  --accent: #4fffb0;
+  --accent-light: rgba(79,255,176,0.08);
   --bg: #060608;
-  --surface: rgba(255,255,255,0.03);
-  --border: rgba(255,255,255,0.07);
+  --surface: rgba(255,255,255,0.04);
+  --surface2: rgba(255,255,255,0.02);
+  --border: rgba(255,255,255,0.08);
+  --border-strong: rgba(255,255,255,0.13);
   --text: #f0f0f0;
-  --muted: rgba(255,255,255,0.35);
+  --sub: rgba(255,255,255,0.55);
+  --muted: rgba(255,255,255,0.3);
+  --teal: #4fffb0;
+  --teal-bg: rgba(79,255,176,0.1);
+  --font-sans: 'Noto Sans KR', -apple-system, 'Helvetica Neue', sans-serif;
+  --font-mono: 'Space Mono', 'SF Mono', 'Menlo', monospace;
 }
-* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; overflow: hidden; }
 body {
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: var(--font-sans);
   background: var(--bg);
   color: var(--text);
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  -webkit-font-smoothing: antialiased;
 }
 .bg-grid {
   position: fixed; inset: 0;
@@ -40,226 +49,264 @@ body {
 }
 .glow-1 { width: 500px; height: 500px; top: -150px; left: -150px; background: #4fffb0; }
 .glow-2 { width: 400px; height: 400px; bottom: -150px; right: -150px; background: #c77dff; }
-.container {
-  position: relative; z-index: 1;
-  width: 100%; max-width: 1100px;
-  padding: 60px 32px 80px;
+
+/* NAV */
+nav {
+  flex-shrink: 0;
+  height: 52px;
+  background: rgba(6,6,8,0.85);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 0.5px solid var(--border-strong);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 28px;
+  position: relative; z-index: 2;
 }
-.header {
-  text-align: center; margin-bottom: 56px;
-}
-.header h1 {
-  font-size: clamp(32px, 5vw, 52px);
-  font-weight: 900; letter-spacing: -0.03em;
-  margin-bottom: 8px;
-}
-.header h1 span { color: #4fffb0; }
-.header p {
-  font-size: 15px; color: var(--muted);
-  font-weight: 300; letter-spacing: 0.05em;
-}
-.header .count-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  margin-top: 16px;
-  padding: 5px 14px;
-  border-radius: 3px;
-  border: 1px solid var(--border);
-  font-family: 'Space Mono', monospace;
-  font-size: 10px; letter-spacing: 0.18em;
-  color: var(--muted);
-}
-.course-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 20px;
-  justify-content: center;
-}
-.course-card {
-  background: rgba(12,12,16,0.85);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 32px 28px 28px;
-  position: relative;
-  overflow: hidden;
-  backdrop-filter: blur(40px);
-  transition: all 0.3s ease;
-  cursor: pointer;
+.logo {
+  font-size: 15px; font-weight: 700; color: var(--accent);
+  letter-spacing: -0.3px;
   text-decoration: none;
-  color: inherit;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+  font-family: var(--font-mono);
+}
+.tabs { display: flex; gap: 0; list-style: none; }
+.tab-btn {
+  background: none; border: none;
+  font-family: var(--font-sans); font-size: 13px; font-weight: 400;
+  color: var(--sub); padding: 6px 14px;
+  border-radius: 6px; cursor: pointer;
+  display: flex; align-items: center; gap: 5px;
+  transition: color 0.15s, background 0.15s;
+  letter-spacing: -0.1px;
+}
+.tab-btn:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+.tab-btn.active { color: var(--accent); font-weight: 500; background: var(--accent-light); }
+.tab-btn .cnt {
+  font-size: 10px; font-weight: 600;
+  background: rgba(255,255,255,0.07); color: var(--sub);
+  padding: 1px 6px; border-radius: 99px; line-height: 1.7;
+}
+.tab-btn.active .cnt { background: var(--accent); color: #060608; }
+
+/* PAGES */
+.pages { flex: 1; overflow: hidden; position: relative; z-index: 1; }
+.page {
+  position: absolute; inset: 0;
+  overflow-y: auto; padding: 28px 32px;
+  display: none; flex-direction: column; gap: 14px;
+  animation: fadein 0.2s ease;
+}
+.page.active { display: flex; }
+@keyframes fadein { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+
+/* HERO */
+.hero {
+  background: var(--surface);
+  border-radius: 16px;
+  border: 0.5px solid var(--border-strong);
+  padding: 28px 28px 28px 32px;
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  backdrop-filter: blur(40px);
+}
+.hero-text p {
+  font-size: 12px; font-weight: 400; color: var(--muted);
+  letter-spacing: 0.2px; margin-bottom: 6px;
+}
+.hero-text h1 {
+  font-size: 22px; font-weight: 700; color: var(--text);
+  letter-spacing: -0.6px; line-height: 1.25;
+}
+.qr-box {
+  flex-shrink: 0;
+  width: 72px; height: 72px;
+  border-radius: 12px;
+  border: 0.5px solid var(--border-strong);
+  padding: 6px;
+  background: white;
+}
+.qr-box img { width: 100%; height: 100%; object-fit: contain; border-radius: 6px; display: block; }
+
+/* QUICK CARDS */
+.quick-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.quick-card {
+  background: var(--surface); border-radius: 14px;
+  border: 0.5px solid var(--border-strong);
+  padding: 18px 16px 16px;
+  display: flex; flex-direction: column; gap: 3px;
+  cursor: pointer; transition: all 0.18s;
+  overflow: hidden;
+  position: relative;
+  backdrop-filter: blur(40px);
+}
+.quick-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--card-color, var(--accent)); opacity: 0.7;
+}
+.quick-card:hover { background: var(--surface2); box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+.quick-card:active { transform: scale(0.98); }
+.q-label { font-size: 12px; font-weight: 500; color: var(--sub); letter-spacing: -0.1px; margin-bottom: 8px; }
+.q-num { font-size: 26px; font-weight: 700; color: var(--text); letter-spacing: -1px; line-height: 1; }
+.q-unit { font-size: 12px; font-weight: 400; color: var(--muted); margin-top: 2px; }
+.q-arrow { font-size: 13px; color: var(--accent); margin-top: 10px; font-weight: 500; }
+
+/* URL BAR */
+.url-bar {
+  background: var(--surface); border-radius: 12px;
+  border: 0.5px solid var(--border-strong);
+  padding: 13px 18px;
+  display: flex; align-items: center; gap: 12px;
+  backdrop-filter: blur(40px);
+}
+.url-label { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: 0.5px; flex-shrink: 0; }
+.url-text { font-family: var(--font-mono); font-size: 11px; color: var(--accent); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.copy-btn {
+  flex-shrink: 0; font-size: 12px; font-weight: 500;
+  background: var(--accent); color: #060608;
+  border: none; border-radius: 8px;
+  padding: 6px 14px; cursor: pointer;
+  font-family: var(--font-sans); letter-spacing: -0.1px;
+  transition: opacity 0.15s;
+}
+.copy-btn:hover { opacity: 0.85; }
+
+/* SCROLL SECTION */
+.scroll-section { display: flex; flex-direction: column; gap: 10px; }
+.sec-head { display: flex; align-items: center; gap: 7px; padding: 0 2px; }
+.sec-title { font-size: 13px; font-weight: 600; color: var(--text); letter-spacing: -0.2px; }
+.sec-cnt {
+  font-size: 10px; font-weight: 600;
+  background: rgba(255,255,255,0.06); color: var(--sub);
+  padding: 1px 7px; border-radius: 99px;
+}
+.scroll-row {
+  display: flex; gap: 10px;
+  overflow-x: auto; overflow-y: visible;
+  padding-bottom: 2px;
+  scrollbar-width: none; -ms-overflow-style: none;
+}
+.scroll-row::-webkit-scrollbar { display: none; }
+
+/* H-CARD */
+.h-card {
+  flex-shrink: 0; width: 200px;
+  background: var(--surface);
+  border: 0.5px solid var(--border-strong);
+  border-radius: 14px; padding: 16px;
+  display: flex; flex-direction: column; gap: 5px;
+  cursor: pointer; transition: all 0.18s;
+  overflow: hidden; position: relative;
+  backdrop-filter: blur(40px);
+}
+.h-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--card-color, var(--accent));
+  opacity: 0.7;
+}
+.h-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+.h-card:active { transform: scale(0.98); }
+.h-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+.h-card-icon { font-size: 20px; }
+.h-card-name { font-size: 13px; font-weight: 600; color: var(--text); letter-spacing: -0.2px; }
+.h-card-desc { font-size: 11px; color: var(--sub); line-height: 1.55; }
+
+.status { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 5px; letter-spacing: 0.1px; }
+.status.on { background: var(--teal-bg); color: var(--teal); }
+.status.soon { background: rgba(255,255,255,0.05); color: var(--muted); }
+
+.empty-hcard {
+  flex-shrink: 0; width: 200px; height: 96px;
+  background: var(--surface); border: 0.5px dashed var(--border-strong);
+  border-radius: 14px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+}
+.empty-hcard p { font-size: 11px; color: var(--muted); }
+.empty-hcard span { font-size: 11px; font-weight: 500; color: var(--sub); }
+
+/* OTHER PAGES */
+.page-title { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; color: var(--text); margin-bottom: 4px; }
+
+.empty-box {
+  background: var(--surface); border: 0.5px dashed var(--border-strong);
+  border-radius: 16px; padding: 60px 20px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center;
+}
+.empty-box .ei { font-size: 32px; margin-bottom: 4px; }
+.empty-box .et { font-size: 14px; font-weight: 600; color: var(--text); }
+.empty-box .es { font-size: 12px; color: var(--sub); }
+
+/* COURSE GRID (tab) */
+.course-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+.course-card {
+  background: var(--surface); border: 0.5px solid var(--border-strong);
+  border-radius: 14px; padding: 24px 20px 20px;
+  display: flex; flex-direction: column; gap: 6px;
+  cursor: pointer; transition: all 0.18s;
+  overflow: hidden; position: relative;
+  text-decoration: none; color: inherit;
+  backdrop-filter: blur(40px);
 }
 .course-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 28px; right: 28px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent, #4fffb0), transparent);
-  opacity: 0.5;
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--card-color, var(--accent));
+  opacity: 0.7;
 }
-.course-card:hover {
-  border-color: rgba(255,255,255,0.15);
-  transform: translateY(-3px);
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 20px 40px rgba(0,0,0,0.4);
+.course-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+.course-card:active { transform: scale(0.98); }
+.course-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.course-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; background: rgba(255,255,255,0.04); border: 0.5px solid var(--border); }
+.course-name { font-size: 14px; font-weight: 600; color: var(--text); letter-spacing: -0.2px; }
+.course-desc { font-size: 12px; color: var(--sub); line-height: 1.55; flex: 1; }
+
+/* PROJECT GRID */
+.proj-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.proj-card {
+  background: var(--surface); border: 0.5px solid var(--border-strong);
+  border-radius: 14px; padding: 20px 18px 18px;
+  display: flex; flex-direction: column; gap: 6px;
+  cursor: pointer; transition: all 0.18s;
+  overflow: hidden; position: relative;
+  text-decoration: none; color: inherit;
+  backdrop-filter: blur(40px);
 }
-.course-card:active {
-  transform: translateY(-1px);
+.proj-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--card-color, var(--accent));
+  opacity: 0.7;
 }
-.card-icon {
-  width: 44px; height: 44px;
-  border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px;
-  margin-bottom: 16px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border);
+.proj-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+.proj-card:active { transform: scale(0.98); }
+.proj-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.proj-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; background: rgba(255,255,255,0.04); border: 0.5px solid var(--border); }
+.proj-name { font-size: 14px; font-weight: 600; color: var(--text); letter-spacing: -0.2px; }
+.proj-desc { font-size: 12px; color: var(--sub); line-height: 1.55; }
+.proj-tag {
+  font-size: 10px; font-weight: 500;
+  color: var(--muted); margin-top: 4px;
+  font-family: var(--font-mono);
 }
-.card-title {
-  font-size: 20px; font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: 6px;
+
+/* ACCESS */
+.access-card {
+  background: var(--surface); border: 0.5px solid var(--border-strong);
+  border-radius: 16px; padding: 28px;
+  display: flex; gap: 28px; align-items: center; max-width: 500px;
+  backdrop-filter: blur(40px);
 }
-.card-sub {
-  font-size: 13px; color: var(--muted);
-  font-weight: 300; line-height: 1.6;
-  flex: 1;
-  margin-bottom: 20px;
-}
-.card-btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  align-self: center;
-  padding: 8px 20px;
-  border-radius: 4px;
-  font-family: 'Space Mono', monospace;
-  font-size: 11px; letter-spacing: 0.12em;
-  background: var(--accent, #4fffb0);
-  color: #060608;
-  border: none;
-  transition: all 0.2s ease;
-  text-transform: uppercase;
-}
-.course-card:hover .card-btn {
-  box-shadow: 0 0 24px rgba(var(--accent-rgb, 79,255,176), 0.3);
-}
-.card-bg-num {
-  position: absolute;
-  bottom: -8px; right: 20px;
-  font-family: 'Space Mono', monospace;
-  font-size: 100px;
-  font-weight: 700;
-  color: rgba(255,255,255,0.02);
-  line-height: 1;
-  pointer-events: none;
-  letter-spacing: -0.05em;
-}
-.lecture-section {
-  margin-top: 8px;
-}
-.lecture-header {
-  text-align: center;
-  margin-bottom: 28px;
-}
-.lecture-header h2 {
-  font-size: clamp(22px, 3.5vw, 36px);
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  margin-bottom: 6px;
-}
-.lecture-header h2 span { color: #4fffb0; }
-.lecture-header p {
-  font-size: 13px;
-  color: var(--muted);
-  font-weight: 300;
-}
-.project-section {
-  margin-top: 56px;
-}
-.project-header {
-  text-align: center;
-  margin-bottom: 28px;
-}
-.project-header h2 {
-  font-size: clamp(22px, 3.5vw, 36px);
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  margin-bottom: 6px;
-}
-.project-header h2 span { color: #48dbfb; }
-.project-header p {
-  font-size: 13px;
-  color: var(--muted);
-  font-weight: 300;
-}
-.project-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-.card-tag {
-  display: inline-flex;
-  align-items: center;
-  align-self: center;
-  padding: 8px 20px;
-  border-radius: 4px;
-  font-family: 'Space Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  color: rgba(255,255,255,0.4);
-  border: 1px solid var(--border);
-  text-transform: uppercase;
-}
-.card-inner-1 { animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) both; animation-delay: 0.08s; }
-.card-inner-2 { animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) both; animation-delay: 0.18s; }
-.card-inner-3 { animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) both; animation-delay: 0.3s; }
-.card-inner-4 { animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) both; animation-delay: 0.44s; }
-.url-section {
-  text-align: center;
-  margin-top: 48px;
-}
-.url-label {
-  font-family: 'Space Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  color: var(--muted);
-  text-transform: uppercase;
-  margin-bottom: 10px;
-}
-.url-box {
-  display: inline-flex;
-  padding: 14px 32px;
-  background: rgba(0,0,0,0.4);
-  border: 1px solid rgba(79,255,176,0.25);
-  border-left: 4px solid #4fffb0;
-  border-radius: 10px;
-  box-shadow: 0 0 40px rgba(79,255,176,0.06);
-}
-.url-text {
-  font-family: 'Space Mono', monospace;
-  font-size: clamp(16px, 2.5vw, 24px);
-  font-weight: 700;
-  color: #4fffb0;
-  letter-spacing: 0.02em;
-}
-.qr-img {
-  display: block;
-  margin: 16px auto 0;
-  width: 180px;
-  height: 180px;
-  border-radius: 12px;
-  border: 2px solid rgba(255,255,255,0.15);
-  background: white;
-  padding: 8px;
-  opacity: 1;
-  transition: transform 0.2s;
-}
-.qr-img:hover { transform: scale(1.05); }
+.access-qr { width: 100px; height: 100px; border-radius: 12px; border: 0.5px solid var(--border-strong); padding: 6px; flex-shrink: 0; background: white; }
+.access-qr img { width: 100%; height: 100%; object-fit: contain; border-radius: 6px; display: block; }
+.access-info h2 { font-size: 15px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; margin-bottom: 5px; }
+.access-info p { font-size: 12px; color: var(--sub); margin-bottom: 12px; line-height: 1.6; }
+.access-url { font-family: var(--font-mono); font-size: 12px; color: var(--accent); background: var(--accent-light); padding: 8px 12px; border-radius: 8px; display: block; word-break: break-all; }
+
+/* DUCK SCENE */
 .duck-scene {
   position: relative;
   width: 100%;
   height: 56px;
-  margin-top: 32px;
+  margin-top: 8px;
   overflow: hidden;
 }
 .ground-line {
@@ -319,14 +366,8 @@ body {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-3px); }
 }
-.footer {
-  text-align: center;
-  margin-top: 20px;
-  font-family: 'Space Mono', monospace;
-  font-size: 9px;
-  color: rgba(255,255,255,0.12);
-  letter-spacing: 0.15em;
-}
+
+/* HIDDEN DUCKS */
 .hidden-duck {
   position: absolute;
   cursor: pointer;
@@ -370,7 +411,7 @@ body {
 .hidden-duck.found .hd-found { display: block; }
 .gotcha-text {
   position: absolute;
-  font-family: 'Space Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 13px;
   font-weight: 700;
   color: #ffca3a;
@@ -384,133 +425,174 @@ body {
   40%  { opacity: 1; transform: translateY(-24px) scale(1.3); }
   100% { opacity: 0; transform: translateY(-60px) scale(0.8); }
 }
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(18px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.anim { animation: fadeUp 0.6s cubic-bezier(0.22,1,0.36,1) both; }
-.anim-1 { animation-delay: 0.05s; }
-.anim-2 { animation-delay: 0.12s; }
-.anim-3 { animation-delay: 0.2s; }
-.anim-4 { animation-delay: 0.3s; }
 </style>
 </head>
 <body>
 <div class="bg-grid"></div>
 <div class="bg-glow"><div class="glow-orb glow-1"></div><div class="glow-orb glow-2"></div></div>
-<div class="container">
-  <div class="header anim anim-1">
-    <h1><span>LEC</span> 강의실</h1>
-    <p>AI 시대, 당신의 아이디어를 현실로 만드는 강의들</p>
-    <div class="count-badge">📚 총 <span id="course-count">0</span>개 강의</div>
-  </div>
-  <div class="lecture-section anim anim-2">
-    <div class="lecture-header">
-      <h2><span>강의</span> 소개</h2>
-      <p>AI 시대, 당신의 아이디어를 현실로 만드는 강의들</p>
+
+<nav>
+  <a class="logo" href="#">LEC</a>
+  <ul class="tabs">
+    <li><button class="tab-btn active" data-tab="home">홈</button></li>
+    <li><button class="tab-btn" data-tab="lectures">강의 <span class="cnt" id="tab-course-cnt">0</span></button></li>
+    <li><button class="tab-btn" data-tab="projects">프로젝트 <span class="cnt">4</span></button></li>
+    <li><button class="tab-btn" data-tab="access">접속 안내</button></li>
+  </ul>
+</nav>
+
+<div class="pages">
+
+  <!-- HOME -->
+  <div class="page active" id="page-home">
+
+    <div class="hero">
+      <div class="hero-text">
+        <p>AI 시대, 당신의 아이디어를</p>
+        <h1>현실로 만드는<br>강의실</h1>
+      </div>
+      <div class="qr-box"><img src="28qiO.jpg" alt="QR"></div>
     </div>
-    <div class="course-grid" id="course-grid"></div>
-  </div>
-  <div class="project-section anim anim-3">
-    <div class="project-header">
-      <h2><span>프로젝트</span> 소개</h2>
-      <p>바이브 코딩으로 만든 다양한 프로젝트들</p>
+
+    <div class="quick-grid">
+      <div class="quick-card" style="--card-color:#4fffb0" onclick="goTab('lectures')">
+        <span class="q-label">강의</span>
+        <span class="q-num" id="quick-course-cnt">0</span>
+        <span class="q-unit">등록된 강의</span>
+        <span class="q-arrow">자세히 보기 →</span>
+      </div>
+      <div class="quick-card" style="--card-color:#c77dff" onclick="goTab('projects')">
+        <span class="q-label">프로젝트</span>
+        <span class="q-num">4</span>
+        <span class="q-unit">바이브 코딩 결과물</span>
+        <span class="q-arrow">자세히 보기 →</span>
+      </div>
+      <div class="quick-card" style="--card-color:#ffca3a" onclick="goTab('access')">
+        <span class="q-label">접속 안내</span>
+        <span class="q-num" style="font-size:18px; margin-top:4px;">QR · URL</span>
+        <span class="q-unit">강의실 바로가기</span>
+        <span class="q-arrow">접속하기 →</span>
+      </div>
     </div>
-    <div class="project-grid" id="project-grid"></div>
-  </div>
-  <div class="url-section anim anim-4">
-    <div class="url-label">강의 접속 주소</div>
-    <div class="url-box">
+
+    <div class="url-bar">
+      <span class="url-label">URL</span>
       <span class="url-text">https://feelmydream80-sys.github.io/lec/</span>
+      <button class="copy-btn" onclick="navigator.clipboard.writeText('https://feelmydream80-sys.github.io/lec/').then(()=>{this.textContent='복사됨';setTimeout(()=>this.textContent='복사',1500)})">복사</button>
     </div>
-    <img src="28qiO.jpg" alt="QR" class="qr-img">
+
+    <div class="scroll-section">
+      <div class="sec-head">
+        <span class="sec-title">강의</span>
+        <span class="sec-cnt" id="scroll-course-cnt">0</span>
+      </div>
+      <div class="scroll-row" id="home-course-row">
+      </div>
+    </div>
+
+    <div class="scroll-section">
+      <div class="sec-head">
+        <span class="sec-title">프로젝트</span>
+        <span class="sec-cnt">4</span>
+      </div>
+      <div class="scroll-row" id="home-proj-row">
+      </div>
+    </div>
+
+    <div class="duck-scene">
+      <div class="ground-line"></div>
+      <div class="duck mom">
+        <div class="duck-inner">
+          <div class="duck-body">
+            <div class="duck-wing"></div>
+            <div class="duck-head">
+              <div class="duck-eye"></div>
+              <div class="duck-beak"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="duck baby baby1">
+        <div class="duck-inner">
+          <div class="duck-body">
+            <div class="duck-wing"></div>
+            <div class="duck-head">
+              <div class="duck-eye"></div>
+              <div class="duck-beak"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="duck baby baby2">
+        <div class="duck-inner">
+          <div class="duck-body">
+            <div class="duck-wing"></div>
+            <div class="duck-head">
+              <div class="duck-eye"></div>
+              <div class="duck-beak"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="duck baby baby3">
+        <div class="duck-inner">
+          <div class="duck-body">
+            <div class="duck-wing"></div>
+            <div class="duck-head">
+              <div class="duck-eye"></div>
+              <div class="duck-beak"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
-  <div class="duck-scene">
-    <div class="ground-line"></div>
-    <div class="duck mom">
-      <div class="duck-inner">
-        <div class="duck-body">
-          <div class="duck-wing"></div>
-          <div class="duck-head">
-            <div class="duck-eye"></div>
-            <div class="duck-beak"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="duck baby baby1">
-      <div class="duck-inner">
-        <div class="duck-body">
-          <div class="duck-wing"></div>
-          <div class="duck-head">
-            <div class="duck-eye"></div>
-            <div class="duck-beak"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="duck baby baby2">
-      <div class="duck-inner">
-        <div class="duck-body">
-          <div class="duck-wing"></div>
-          <div class="duck-head">
-            <div class="duck-eye"></div>
-            <div class="duck-beak"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="duck baby baby3">
-      <div class="duck-inner">
-        <div class="duck-body">
-          <div class="duck-wing"></div>
-          <div class="duck-head">
-            <div class="duck-eye"></div>
-            <div class="duck-beak"></div>
-          </div>
-        </div>
+
+  <!-- LECTURES -->
+  <div class="page" id="page-lectures">
+    <p class="page-title">강의</p>
+    <div class="course-grid" id="lecture-grid"></div>
+  </div>
+
+  <!-- PROJECTS -->
+  <div class="page" id="page-projects">
+    <p class="page-title">프로젝트</p>
+    <div class="proj-grid" id="project-grid"></div>
+  </div>
+
+  <!-- ACCESS -->
+  <div class="page" id="page-access">
+    <p class="page-title">접속 안내</p>
+    <div class="access-card">
+      <div class="access-qr"><img src="28qiO.jpg" alt="QR 코드"></div>
+      <div class="access-info">
+        <h2>LEC 강의실 바로가기</h2>
+        <p>QR코드를 스캔하거나 아래 주소로 접속하세요.</p>
+        <span class="access-url">https://feelmydream80-sys.github.io/lec/</span>
       </div>
     </div>
   </div>
-  <div class="footer">© 2026 LEC</div>
+
 </div>
+
 <script>
 const courses = [
   {
     folder: 'ViveCodingIntro',
     name: 'Vibe Coding 입문',
-    desc: 'AI에게 말로 지시해서 앱을 만드는<br>새로운 개발 패러다임을 배웁니다',
+    desc: 'AI에게 말로 지시해서 앱을 만드는 새로운 개발 패러다임을 배웁니다',
     accent: '#4fffb0',
-    accentRgb: '79,255,176',
     icon: '🎯'
   },
   {
     folder: 'KidsSafty',
     name: 'Kids Safe AI',
-    desc: '어린이를 위한 안전한 AI 활용 교육.<br>AI의 위험성과 올바른 사용법을 알아봅니다',
+    desc: '어린이를 위한 안전한 AI 활용 교육. AI의 위험성과 올바른 사용법을 알아봅니다',
     accent: '#ff6b6b',
-    accentRgb: '255,107,107',
     icon: '🛡️'
   },
 ];
-
-document.getElementById('course-count').textContent = courses.length;
-
-const grid = document.getElementById('course-grid');
-courses.forEach((c, i) => {
-  const card = document.createElement('a');
-  card.href = c.folder + '/';
-  card.className = 'course-card anim anim-' + Math.min(i + 1, 4);
-  card.style.setProperty('--accent', c.accent);
-  card.style.setProperty('--accent-rgb', c.accentRgb);
-  card.innerHTML =
-    '<div class="card-bg-num">' + String(i + 1).padStart(2, '0') + '</div>' +
-    '<div class="card-icon card-inner-1">' + c.icon + '</div>' +
-    '<div class="card-title card-inner-2" style="color:' + c.accent + '">' + c.name + '</div>' +
-    '<div class="card-sub card-inner-3">' + c.desc + '</div>' +
-    '<div class="card-btn card-inner-4" style="background:' + c.accent + '">시작하기 ▶</div>';
-  grid.appendChild(card);
-});
 
 const projects = [
   {
@@ -547,22 +629,108 @@ const projects = [
   }
 ];
 
-const pgrid = document.getElementById('project-grid');
-projects.forEach((p) => {
-  const card = document.createElement('a');
-  card.href = p.url;
-  card.target = '_blank';
-  card.rel = 'noopener';
-  card.className = 'course-card anim anim-4';
-  card.style.setProperty('--accent', p.accent);
-  card.innerHTML =
-    '<div class="card-icon card-inner-1" style="color:' + p.accent + '">' + p.icon + '</div>' +
-    '<div class="card-title card-inner-2" style="color:' + p.accent + '">' + p.name + '</div>' +
-    '<div class="card-sub card-inner-3">' + p.desc + '</div>' +
-    '<div class="card-tag card-inner-4">' + p.tag + '</div>';
-  pgrid.appendChild(card);
+function buildHomeCards() {
+  const cnt = courses.length;
+  document.getElementById('tab-course-cnt').textContent = cnt;
+  document.getElementById('quick-course-cnt').textContent = cnt;
+  document.getElementById('scroll-course-cnt').textContent = cnt;
+
+  const courseRow = document.getElementById('home-course-row');
+  if (cnt === 0) {
+    courseRow.innerHTML = '<div class="empty-hcard"><span>강의 준비 중</span><p>곧 오픈될 예정이에요</p></div>';
+  } else {
+    courseRow.innerHTML = '';
+    courses.forEach(c => {
+      const card = document.createElement('div');
+      card.className = 'h-card';
+      card.style.setProperty('--card-color', c.accent);
+      card.onclick = () => { window.location.href = c.folder + '/'; };
+      card.innerHTML =
+        '<div class="h-card-top"><span class="h-card-icon">' + c.icon + '</span><span class="status on">진행중</span></div>' +
+        '<p class="h-card-name">' + c.name + '</p>' +
+        '<p class="h-card-desc">' + c.desc + '</p>';
+      courseRow.appendChild(card);
+    });
+    const add = document.createElement('div');
+    add.className = 'h-card';
+    add.style.cssText = 'border-style:dashed;cursor:default;';
+    add.innerHTML = '<div class="h-card-top"><span class="h-card-icon">＋</span><span class="status soon">준비중</span></div><p class="h-card-name">더 많은 강의</p><p class="h-card-desc">새로운 강의가 곧 추가될 예정입니다</p>';
+    courseRow.appendChild(add);
+  }
+
+  const projRow = document.getElementById('home-proj-row');
+  projRow.innerHTML = '';
+  projects.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'h-card';
+    card.style.setProperty('--card-color', p.accent);
+    card.onclick = () => { window.open(p.url, '_blank', 'noopener'); };
+    card.innerHTML =
+      '<div class="h-card-top"><span class="h-card-icon">' + p.icon + '</span><span class="status on">진행중</span></div>' +
+      '<p class="h-card-name">' + p.name + '</p>' +
+      '<p class="h-card-desc">' + p.desc + '</p>';
+    projRow.appendChild(card);
+  });
+  const pAdd = document.createElement('div');
+  pAdd.className = 'h-card';
+  pAdd.style.cssText = 'border-style:dashed;cursor:default;';
+  pAdd.innerHTML = '<div class="h-card-top"><span class="h-card-icon">＋</span><span class="status soon">준비중</span></div><p class="h-card-name">더 많은 프로젝트</p><p class="h-card-desc">새로운 프로젝트가 곧 추가될 예정입니다</p>';
+  projRow.appendChild(pAdd);
+}
+
+function buildLectureGrid() {
+  const grid = document.getElementById('lecture-grid');
+  courses.forEach(c => {
+    const card = document.createElement('a');
+    card.href = c.folder + '/';
+    card.className = 'course-card';
+    card.style.setProperty('--card-color', c.accent);
+    card.innerHTML =
+      '<div class="course-top"><div class="course-icon" style="color:' + c.accent + '">' + c.icon + '</div><span class="status on">진행중</span></div>' +
+      '<p class="course-name" style="color:' + c.accent + '">' + c.name + '</p>' +
+      '<p class="course-desc">' + c.desc + '</p>';
+    grid.appendChild(card);
+  });
+  if (courses.length === 0) {
+    grid.innerHTML = '<div class="empty-box"><div class="ei">🎓</div><div class="et">아직 등록된 강의가 없습니다</div><div class="es">곧 새 강의가 오픈될 예정입니다</div></div>';
+  }
+}
+
+function buildProjectGrid() {
+  const grid = document.getElementById('project-grid');
+  projects.forEach(p => {
+    const card = document.createElement('a');
+    card.href = p.url;
+    card.target = '_blank';
+    card.rel = 'noopener';
+    card.className = 'proj-card';
+    card.style.setProperty('--card-color', p.accent);
+    card.innerHTML =
+      '<div class="proj-top"><div class="proj-icon" style="color:' + p.accent + '">' + p.icon + '</div><span class="status on">진행중</span></div>' +
+      '<p class="proj-name" style="color:' + p.accent + '">' + p.name + '</p>' +
+      '<p class="proj-desc">' + p.desc + '</p>' +
+      '<span class="proj-tag">' + p.tag + '</span>';
+    grid.appendChild(card);
+  });
+}
+
+function goTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelector('[data-tab="' + name + '"]').classList.add('active');
+  document.getElementById('page-' + name).classList.add('active');
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => goTab(btn.dataset.tab));
 });
 
+buildHomeCards();
+buildLectureGrid();
+buildProjectGrid();
+
+// Hidden ducks
+const container = document.querySelector('.pages');
 const hiddenDucks = [
   { top: '10%', left: '6%', size: 's', op: 0.14 },
   { top: '16%', right: '12%', size: 's', op: 0.18 },
@@ -575,14 +743,12 @@ const hiddenDucks = [
   { top: '82%', left: '35%', size: 'l', op: 0.13 },
   { bottom: '10%', left: '12%', size: 's', op: 0.22 },
 ];
-
-const container = document.querySelector('.container');
 let foundCount = 0;
 
-hiddenDucks.forEach((d, i) => {
+hiddenDucks.forEach((d) => {
   const duck = document.createElement('div');
   duck.className = 'hidden-duck';
-  const style = `position:absolute;z-index:5;cursor:pointer;opacity:${d.op};transition:opacity 0.3s;`;
+  const style = 'position:absolute;z-index:5;cursor:pointer;opacity:' + d.op + ';transition:opacity 0.3s;';
   const pos = [];
   if (d.top !== undefined) pos.push('top:' + d.top);
   if (d.left !== undefined) pos.push('left:' + d.left);
@@ -592,16 +758,16 @@ hiddenDucks.forEach((d, i) => {
   duck.innerHTML =
     '<div class="hd-body ' + d.size + '"><div class="hd-head"><div class="hd-beak"></div></div></div>' +
     '<div class="hd-found">😵</div>';
-  
+
   duck.addEventListener('click', function(e) {
     if (this.classList.contains('found')) return;
     this.classList.add('found');
     foundCount++;
-    
+
     const rect = this.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
     const cy = rect.top + rect.height / 2;
-    
+
     confetti({
       particleCount: 40,
       spread: 50,
@@ -609,7 +775,7 @@ hiddenDucks.forEach((d, i) => {
       colors: ['#ffca3a', '#ff9f43', '#4fffb0', '#48dbfb', '#ff6b6b'],
       ticks: 60
     });
-    
+
     const txt = document.createElement('div');
     txt.className = 'gotcha-text';
     txt.textContent = '걸렸다!';
@@ -617,7 +783,7 @@ hiddenDucks.forEach((d, i) => {
     txt.style.top = (rect.top - 10) + 'px';
     document.body.appendChild(txt);
     setTimeout(() => txt.remove(), 1000);
-    
+
     if (foundCount === hiddenDucks.length) {
       setTimeout(() => {
         confetti({ particleCount: 150, spread: 100, origin: { x: 0.5, y: 0.3 } });
@@ -625,7 +791,7 @@ hiddenDucks.forEach((d, i) => {
       }, 500);
     }
   });
-  
+
   container.appendChild(duck);
 });
 </script>
