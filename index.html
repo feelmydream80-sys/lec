@@ -986,7 +986,7 @@ function gameWin() {
   gameStatusEl.textContent = '🦆 집에 잘 들어갔습니다! 🏠';
   gameStatusEl.className = 'game-status show';
   gamePhraseEl.innerHTML = '';
-  gameHintEl.textContent = '[`] 키로 다시 시작';
+  gameHintEl.textContent = '[~] 키로 다시 시작';
   gameHintEl.className = 'game-hint';
   confetti({ particleCount: 150, spread: 120, origin: { x: 0.5, y: 0.4 } });
 }
@@ -998,7 +998,7 @@ function gameOver() {
   gamePhraseEl.innerHTML = '';
   const allDucks = paradeScene.querySelectorAll('.parade-duck');
   allDucks.forEach(pd => pd.classList.add('returning'));
-  gameHintEl.textContent = '[`] 키로 재시작';
+  gameHintEl.textContent = '[~] 키로 재시작';
   gameHintEl.className = 'game-hint';
 }
 
@@ -1036,7 +1036,7 @@ function moveLoop() {
 }
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === '`') {
+  if (e.code === 'Backquote') {
     e.preventDefault();
     if ((gameState === 'IDLE' || gameState === 'GAME_OVER' || gameState === 'WIN') && foundCount === 10) {
       initGame();
