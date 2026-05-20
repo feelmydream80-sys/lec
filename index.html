@@ -357,6 +357,88 @@ nav {
   100% { transform: scale(1); opacity: 1; }
 }
 
+/* GAME */
+.game-overlay {
+  position: relative;
+  width: 100%;
+  height: 52px;
+  margin-top: 4px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  pointer-events: none;
+}
+.game-status {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 700;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.game-status.show { opacity: 1; }
+.game-phrase {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: 36px;
+  flex-wrap: wrap;
+}
+.game-phrase .pc {
+  display: inline-block;
+  font-weight: 700;
+  animation: char-pop 0.2s ease-out;
+}
+@keyframes char-pop {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.game-hint {
+  font-size: 10px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  transition: color 0.2s;
+}
+.game-hint.active { color: var(--teal); }
+.game-hint.danger { color: #ff6b6b; }
+.duck-caught {
+  pointer-events: none;
+}
+.duck-caught .pd-body { background: #b0b0b0; }
+.duck-caught .pd-head { background: #b0b0b0; }
+.duck-caught .pd-inner {
+  animation: duck-shake 0.3s ease-in-out infinite !important;
+}
+.duck-caught::after {
+  content: '😭';
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 16px;
+  z-index: 5;
+}
+@keyframes duck-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+.parade-duck.returning {
+  animation: duck-return 1s ease-in forwards;
+}
+.parade-duck.returning .pd-inner {
+  animation: duck-bob 0.3s ease-in-out infinite !important;
+}
+@keyframes duck-return {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(40px); }
+}
+
 /* HIDDEN DUCKS */
 .hidden-duck {
   position: absolute;
@@ -490,6 +572,12 @@ nav {
 
     <div class="duck-scene">
       <div class="ground-line"></div>
+    </div>
+
+    <div class="game-overlay" id="game-overlay">
+      <div class="game-status" id="game-status"></div>
+      <div class="game-phrase" id="game-phrase"></div>
+      <div class="game-hint" id="game-hint"></div>
     </div>
 
   </div>
@@ -781,6 +869,176 @@ hiddenDucks.forEach((d, i) => {
 
   container.appendChild(duck);
 });
+
+// ============  무궁화 꽃이 피었습니다 GAME  ============
+const gamePhrase = '무궁화 꽃이 피었습니다';
+const gameStatusEl = document.getElementById('game-status');
+const gamePhraseEl = document.getElementById('game-phrase');
+const gameHintEl = document.getElementById('game-hint');
+const SLOT_BASE = 10;
+const SLOT_GAP = 38;
+const CHAR_COLORS = ['#0071E3','#34C759','#FF9F0A','#ff6b6b','#c77dff','#0db7ed','#ffca3a'];
+
+let gameState = 'IDLE';
+let spaceHeld = false;
+let moveRAF = null;
+let moveSpeed = 5;
+let currentChar = 0;
+let reciteTimer = null;
+let gameDuckPositions = [];
+let activeDuckIndices = [];
+
+function getSlotLeft(idx) { return SLOT_BASE + idx * SLOT_GAP; }
+
+function collectGamePositions() {
+  gameDuckPositions = [];
+  for (let i = 0; i < 10; i++) gameDuckPositions.push(getSlotLeft(i));
+}
+
+function resetToSlots() {
+  const all = paradeScene.querySelectorAll('.parade-duck');
+  all.forEach((pd, i) => {
+    pd.classList.remove('walking', 'waiting', 'entering', 'duck-caught', 'returning');
+    pd.style.left = getSlotLeft(i) + 'px';
+    pd.style.transition = 'left 0.4s ease';
+    setTimeout(() => { pd.classList.add('waiting'); pd.style.transition = ''; }, 50);
+  });
+  collectGamePositions();
+}
+
+function initGame() {
+  if (foundCount < 10) return;
+  gameState = 'READY';
+  gameStatusEl.textContent = '게임이 시작됩니다';
+  gameStatusEl.className = 'game-status show';
+  gamePhraseEl.innerHTML = '';
+  gameHintEl.textContent = '';
+  resetToSlots();
+  setTimeout(() => {
+    gameState = 'PLAYING';
+    gameStatusEl.className = 'game-status';
+    activeDuckIndices = [];
+    for (let i = 0; i < 10; i++) activeDuckIndices.push(i);
+    startReciting();
+  }, 1500);
+}
+
+function startReciting() {
+  currentChar = 0;
+  gameState = 'RECITING';
+  moveSpeed = 5;
+  gamePhraseEl.innerHTML = '';
+  reciteNextChar();
+}
+
+function reciteNextChar() {
+  if (currentChar >= gamePhrase.length) {
+    gameState = 'CHECKING';
+    gameHintEl.textContent = '뗏!';
+    gameHintEl.className = 'game-hint danger';
+    setTimeout(() => {
+      if (spaceHeld) {
+        catchDuck();
+      } else {
+        gameHintEl.className = 'game-hint';
+        setTimeout(startReciting, 500);
+      }
+    }, 250);
+    return;
+  }
+  const ch = gamePhrase[currentChar];
+  const span = document.createElement('span');
+  span.className = 'pc';
+  if (ch === ' ') {
+    span.innerHTML = '&nbsp;';
+    span.style.width = '14px';
+  } else {
+    span.style.fontSize = (Math.floor(Math.random() * 24 + 24)) + 'px';
+    span.style.color = CHAR_COLORS[Math.floor(Math.random() * CHAR_COLORS.length)];
+    span.style.transform = 'translateY(' + (Math.random() * 10 - 5) + 'px)';
+    span.textContent = ch;
+  }
+  gamePhraseEl.appendChild(span);
+  gameHintEl.textContent = '⬆';
+  gameHintEl.className = 'game-hint active';
+  currentChar++;
+  reciteTimer = setTimeout(reciteNextChar, Math.floor(Math.random() * 900 + 100));
+}
+
+function catchDuck() {
+  if (activeDuckIndices.length === 0) return;
+  gameState = 'CAUGHT';
+  const caughtIdx = activeDuckIndices.pop();
+  const allDucks = paradeScene.querySelectorAll('.parade-duck');
+  const caughtEl = allDucks[caughtIdx];
+  if (caughtEl) {
+    caughtEl.classList.remove('waiting', 'walking');
+    const pos = parseFloat(caughtEl.style.left) || getSlotLeft(caughtIdx);
+    caughtEl.style.left = pos + 'px';
+    caughtEl.style.transition = 'none';
+    // reflow
+    void caughtEl.offsetWidth;
+    caughtEl.classList.add('duck-caught');
+  }
+  gamePhraseEl.innerHTML = '';
+  gameHintEl.textContent = '걸렸다! 😭';
+  gameHintEl.className = 'game-hint danger';
+  if (caughtIdx === 0) {
+    setTimeout(gameOver, 1200);
+  } else {
+    setTimeout(() => {
+      gamePhraseEl.innerHTML = '';
+      gameHintEl.textContent = '';
+      gameHintEl.className = 'game-hint';
+      startReciting();
+    }, 1500);
+  }
+}
+
+function gameOver() {
+  gameState = 'GAME_OVER';
+  gameStatusEl.textContent = 'GAME OVER';
+  gameStatusEl.className = 'game-status show';
+  gamePhraseEl.innerHTML = '';
+  const allDucks = paradeScene.querySelectorAll('.parade-duck');
+  allDucks.forEach(pd => pd.classList.add('returning'));
+  gameHintEl.textContent = '[`] 키로 재시작';
+  gameHintEl.className = 'game-hint';
+}
+
+function moveLoop() {
+  if (spaceHeld && gameState === 'RECITING') {
+    moveSpeed = Math.min(moveSpeed + 0.3, 20);
+    const allDucks = paradeScene.querySelectorAll('.parade-duck');
+    activeDuckIndices.forEach(idx => {
+      gameDuckPositions[idx] += moveSpeed;
+      const el = allDucks[idx];
+      if (el && !el.classList.contains('duck-caught')) {
+        el.style.left = gameDuckPositions[idx] + 'px';
+      }
+    });
+  }
+  moveRAF = requestAnimationFrame(moveLoop);
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === '`') {
+    e.preventDefault();
+    if ((gameState === 'IDLE' || gameState === 'GAME_OVER') && foundCount === 10) {
+      initGame();
+    }
+  }
+  if (e.code === 'Space') {
+    e.preventDefault();
+    spaceHeld = true;
+  }
+});
+document.addEventListener('keyup', (e) => {
+  if (e.code === 'Space') { e.preventDefault(); spaceHeld = false; moveSpeed = 5; }
+});
+
+collectGamePositions();
+moveRAF = requestAnimationFrame(moveLoop);
 </script>
 </body>
 </html>
