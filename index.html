@@ -606,7 +606,12 @@ let courses = [];
 async function loadCourses() {
   try {
     const resp = await fetch('./courses.json');
-    if (resp.ok) courses = (await resp.json()).filter(i => !i._guide);
+    if (resp.ok) {
+      const raw = await resp.json();
+      courses = Object.entries(raw)
+        .filter(([k]) => k !== '_guide' && k !== '_icons')
+        .map(([folder, data]) => ({ folder, ...data }));
+    }
   } catch (e) {
     courses = [];
   }
@@ -623,7 +628,12 @@ let projects = [];
 async function loadProjects() {
   try {
     const resp = await fetch('./projects.json');
-    if (resp.ok) projects = (await resp.json()).filter(i => !i._guide);
+    if (resp.ok) {
+      const raw = await resp.json();
+      projects = Object.entries(raw)
+        .filter(([k]) => k !== '_guide' && k !== '_icons')
+        .map(([folder, data]) => ({ folder, ...data }));
+    }
   } catch (e) {
     projects = [];
   }
@@ -672,7 +682,7 @@ function buildHomeCards() {
     const card = document.createElement('div');
     card.className = 'h-card';
     card.style.setProperty('--card-color', '#34C759');
-    card.onclick = () => { window.open(p.url, '_blank', 'noopener'); };
+    card.onclick = () => { p.folder ? window.location.href = p.folder + '/' : window.open(p.url, '_blank', 'noopener'); };
     card.innerHTML =
       '<div class="h-card-top"><span class="h-card-icon">' + p.icon + '</span><span class="status on">진행중</span></div>' +
       '<p class="h-card-name">' + p.name + '</p>' +
@@ -708,9 +718,13 @@ function buildProjectGrid() {
   const grid = document.getElementById('project-grid');
   projects.forEach(p => {
     const card = document.createElement('a');
-    card.href = p.url;
-    card.target = '_blank';
-    card.rel = 'noopener';
+    if (p.folder) {
+      card.href = p.folder + '/';
+    } else {
+      card.href = p.url;
+      card.target = '_blank';
+      card.rel = 'noopener';
+    }
     card.className = 'proj-card';
     card.style.setProperty('--card-color', '#34C759');
     card.innerHTML =
