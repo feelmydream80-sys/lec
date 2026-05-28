@@ -1,0 +1,34 @@
+[
+  {
+    "name": "Power Papers",
+    "desc": "전력·에너지 최신 arXiv 논문을 한국어 요약과 함께 큐레이션",
+    "url": "https://feelmydream.pythonanywhere.com/",
+    "accent": "#4fffb0",
+    "icon": "⚡",
+    "tag": "Python · Flask"
+  },
+  {
+    "name": "상산고 급식 영양 분석",
+    "desc": "박민수 학생 작품 — AI로 급식 메뉴의 영양 성분 분석",
+    "url": "https://huggingface.co/spaces/feelmydream/SSHS",
+    "accent": "#ffca3a",
+    "icon": "🍱",
+    "tag": "Python · Flask · YOLO"
+  },
+  {
+    "name": "Kids Safe AI",
+    "desc": "AI로 아이 안전을 지키는 스마트 안전 지킴이 앱",
+    "url": "https://feelmydream80-sys.github.io/kidssaft/",
+    "accent": "#ff6b6b",
+    "icon": "🛡️",
+    "tag": "Python"
+  },
+  {
+    "name": "EMF Calculator",
+    "desc": "전자파 수치를 계산하는 웹 기반 전자파 계산기",
+    "url": "https://feelmydream80-sys.github.io/EMF-Calculator/",
+    "accent": "#c77dff",
+    "icon": "🧮",
+    "tag": "JavaScript · HTML"
+  }
+]

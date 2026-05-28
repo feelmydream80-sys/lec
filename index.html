@@ -498,7 +498,7 @@ nav {
   <ul class="tabs">
     <li><button class="tab-btn active" data-tab="home">홈</button></li>
     <li><button class="tab-btn" data-tab="lectures">강의 <span class="cnt" id="tab-course-cnt">0</span></button></li>
-    <li><button class="tab-btn" data-tab="projects">프로젝트 <span class="cnt">4</span></button></li>
+    <li><button class="tab-btn" data-tab="projects">프로젝트 <span class="cnt" id="tab-proj-cnt">0</span></button></li>
     <li><button class="tab-btn" data-tab="access">접속 안내</button></li>
   </ul>
 </nav>
@@ -525,7 +525,7 @@ nav {
       </div>
       <div class="quick-card" style="--card-color:#34C759" onclick="goTab('projects')">
         <span class="q-label">프로젝트</span>
-        <span class="q-num">4</span>
+        <span class="q-num" id="quick-proj-cnt">0</span>
         <span class="q-unit">바이브 코딩 결과물</span>
         <span class="q-arrow">자세히 보기 →</span>
       </div>
@@ -555,7 +555,7 @@ nav {
     <div class="scroll-section">
       <div class="sec-head">
         <span class="sec-title">프로젝트</span>
-        <span class="sec-cnt">4</span>
+        <span class="sec-cnt" id="scroll-proj-cnt">0</span>
       </div>
       <div class="scroll-row" id="home-proj-row">
       </div>
@@ -625,40 +625,39 @@ const courses = [
   },
 ];
 
-const projects = [
-  {
-    name: 'Power Papers',
-    desc: '전력·에너지 최신 arXiv 논문을 한국어 요약과 함께 큐레이션',
-    url: 'https://feelmydream.pythonanywhere.com/',
-    accent: '#4fffb0',
-    icon: '⚡',
-    tag: 'Python · Flask'
-  },
-  {
-    name: '상산고 급식 영양 분석',
-    desc: '박민수 학생 작품 — AI로 급식 메뉴의 영양 성분 분석',
-    url: 'https://huggingface.co/spaces/feelmydream/SSHS',
-    accent: '#ffca3a',
-    icon: '🍱',
-    tag: 'HTML · CSS · JS'
-  },
-  {
-    name: 'Kids Safe AI',
-    desc: 'AI로 아이 안전을 지키는 스마트 안전 지킴이 앱',
-    url: 'https://feelmydream80-sys.github.io/kidssaft/',
-    accent: '#ff6b6b',
-    icon: '🛡️',
-    tag: 'Python'
-  },
-  {
-    name: 'EMF Calculator',
-    desc: '전자파 수치를 계산하는 웹 기반 전자파 계산기',
-    url: 'https://feelmydream80-sys.github.io/EMF-Calculator/',
-    accent: '#c77dff',
-    icon: '🧮',
-    tag: 'JavaScript · HTML'
+/* ====================================================
+   사용 가능한 아이콘 (project.json에서 자유롭게 사용)
+   ====================================================
+   🍱 도시락    🍽️ 식사      🥗 샐러드    🥘 찌개
+   🍜 국수      🍚 밥        🥩 고기       🥦 채소
+   🍎 과일      🥛 우유      🧀 치즈       🥜 견과류
+   🧂 양념      🫖 차        ☕ 커피       🧃 주스
+   📊 통계      📋 분석      📱 모바일     💻 개발
+   🤖 AI        🧠 두뇌      ⚙️ 설정      🔬 실험
+   🌱 건강      💪 운동      🏆 목표      📈 성장
+   🌐 글로벌    🏫 학교      👨‍🏫 교육     📚 학습
+   ⚡ 에너지    🛡️ 안전      🧮 계산기    🎯 타겟
+   🔔 알림      💾 저장      🔒 보안       ☁️ 클라우드
+   ==================================================== */
+
+let projects = [];
+
+async function loadProjects() {
+  try {
+    const resp = await fetch('./projects.json');
+    if (resp.ok) projects = await resp.json();
+  } catch (e) {
+    projects = [];
   }
-];
+  // counts
+  const cnt = projects.length;
+  document.getElementById('tab-proj-cnt').textContent = cnt;
+  document.getElementById('quick-proj-cnt').textContent = cnt;
+  document.getElementById('scroll-proj-cnt').textContent = cnt;
+  // render
+  buildHomeCards();
+  buildProjectGrid();
+}
 
 function buildHomeCards() {
   const cnt = courses.length;
@@ -756,9 +755,8 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => goTab(btn.dataset.tab));
 });
 
-buildHomeCards();
+loadProjects();
 buildLectureGrid();
-buildProjectGrid();
 
 // Hidden ducks — 1 mom + 9 babies. Found → enter slot → wait → mom triggers parade
 const hiddenDucks = [
