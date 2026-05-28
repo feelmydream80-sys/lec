@@ -606,12 +606,7 @@ let courses = [];
 async function loadCourses() {
   try {
     const resp = await fetch('./courses.json');
-    if (resp.ok) {
-      const raw = await resp.json();
-      courses = Object.entries(raw)
-        .filter(([k]) => k !== '_guide' && k !== '_icons')
-        .map(([folder, data]) => ({ folder, ...data }));
-    }
+    if (resp.ok) courses = (await resp.json()).filter(i => !i._guide);
   } catch (e) {
     courses = [];
   }
@@ -628,12 +623,7 @@ let projects = [];
 async function loadProjects() {
   try {
     const resp = await fetch('./projects.json');
-    if (resp.ok) {
-      const raw = await resp.json();
-      projects = Object.entries(raw)
-        .filter(([k]) => k !== '_guide' && k !== '_icons')
-        .map(([folder, data]) => ({ folder, ...data }));
-    }
+    if (resp.ok) projects = (await resp.json()).filter(i => !i._guide);
   } catch (e) {
     projects = [];
   }
