@@ -601,51 +601,29 @@ nav {
 </div>
 
 <script>
-const courses = [
-  {
-    folder: 'ViveCodingIntro',
-    name: 'Vibe Coding 입문',
-    desc: 'AI에게 말로 지시해서 앱을 만드는 새로운 개발 패러다임을 배웁니다',
-    accent: '#4fffb0',
-    icon: '🎯'
-  },
-  {
-    folder: 'ViveCodingStd',
-    name: 'Vibe Coding 일반',
-    desc: 'AI와 함께 기획서, 개발 계획서, 체크리스트를 만들고<br>그에 따라 프로젝트를 진행하는 실전 방식의 강의',
-    accent: '#7c6af7',
-    icon: '📋'
-  },
-  {
-    folder: 'KidsSafty',
-    name: 'Kids Safe AI',
-    desc: '어린이를 위한 안전한 AI 활용 교육. AI의 위험성과 올바른 사용법을 알아봅니다',
-    accent: '#ff6b6b',
-    icon: '🛡️'
-  },
-];
+let courses = [];
 
-/* ====================================================
-   사용 가능한 아이콘 (project.json에서 자유롭게 사용)
-   ====================================================
-   🍱 도시락    🍽️ 식사      🥗 샐러드    🥘 찌개
-   🍜 국수      🍚 밥        🥩 고기       🥦 채소
-   🍎 과일      🥛 우유      🧀 치즈       🥜 견과류
-   🧂 양념      🫖 차        ☕ 커피       🧃 주스
-   📊 통계      📋 분석      📱 모바일     💻 개발
-   🤖 AI        🧠 두뇌      ⚙️ 설정      🔬 실험
-   🌱 건강      💪 운동      🏆 목표      📈 성장
-   🌐 글로벌    🏫 학교      👨‍🏫 교육     📚 학습
-   ⚡ 에너지    🛡️ 안전      🧮 계산기    🎯 타겟
-   🔔 알림      💾 저장      🔒 보안       ☁️ 클라우드
-   ==================================================== */
+async function loadCourses() {
+  try {
+    const resp = await fetch('./courses.json');
+    if (resp.ok) courses = (await resp.json()).filter(i => !i._guide);
+  } catch (e) {
+    courses = [];
+  }
+  const cnt = courses.length;
+  document.getElementById('tab-course-cnt').textContent = cnt;
+  document.getElementById('quick-course-cnt').textContent = cnt;
+  document.getElementById('scroll-course-cnt').textContent = cnt;
+  buildHomeCards();
+  buildLectureGrid();
+}
 
 let projects = [];
 
 async function loadProjects() {
   try {
     const resp = await fetch('./projects.json');
-    if (resp.ok) projects = await resp.json();
+    if (resp.ok) projects = (await resp.json()).filter(i => !i._guide);
   } catch (e) {
     projects = [];
   }
@@ -755,8 +733,8 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => goTab(btn.dataset.tab));
 });
 
+loadCourses();
 loadProjects();
-buildLectureGrid();
 
 // Hidden ducks — 1 mom + 9 babies. Found → enter slot → wait → mom triggers parade
 const hiddenDucks = [
