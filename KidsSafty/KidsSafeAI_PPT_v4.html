@@ -248,7 +248,7 @@ ul li::before { content: '›'; position: absolute; left: 0; font-weight: 700; }
 <body>
 <div class="bg-grid"></div>
 <div class="progress-track"><div id="progress-bar"></div></div>
-<div class="slide-counter"><span id="cur-num">01</span> / <span id="tot-num">16</span></div>
+<div class="slide-counter"><span id="cur-num">01</span> / <span id="tot-num">15</span></div>
 <div class="cat-label" id="cat-label">INTRO</div>
 <button class="nav-btn prev-btn" id="prev-btn" disabled>← BACK</button>
 <button class="nav-btn next-btn" id="next-btn">NEXT →</button>
@@ -308,8 +308,8 @@ const slides = [
     {
         cat: "MISSION", num: "07",
         title: "미션 시스템",
-        sub: "4단계 — 매 단계마다 랜덤 방식 지정",
-        desc: '<div class="table-wrap"><table><tr><th>단계</th><th>미션</th><th>가능한 방식</th></tr><tr><td>1/4</td><td>🟢 초록불 확인</td><td>📱 흔들기 / 🎤 <strong>"초록불"</strong></td></tr><tr><td>2/4</td><td>👀 좌우 확인</td><td>📱 흔들기 / 🎤 <strong>"확인 완료"</strong></td></tr><tr><td>3/4</td><td>🔄 회전하며 살피기</td><td>🔄 회전 / 🎤 <strong>"회전했어요"</strong></td></tr><tr><td>4/4</td><td>✅ 건너기 완료</td><td>📱 흔들기 / 🎤 <strong>"다 건넜어요"</strong></td></tr></table></div><div class="desc-list" style="margin-top:12px;">⚠️ iOS Safari: 음성인식 미지원 → 흔들기/회전만 자동 필터링<br>🔊 TTS: 미션 시작/단계/완료 시 음성안내 + 진동 0.5초×5회</div>',
+        sub: "4단계 — 매 단계마다 랜덤 방식 지정 + 실제 UI",
+        desc: '<div class="table-wrap"><table><tr><th>단계</th><th>미션</th><th>가능한 방식</th></tr><tr><td>1/4</td><td>🟢 초록불 확인</td><td>📱 흔들기 / 🎤 <strong>"초록불"</strong></td></tr><tr><td>2/4</td><td>👀 좌우 확인</td><td>📱 흔들기 / 🎤 <strong>"확인 완료"</strong></td></tr><tr><td>3/4</td><td>🔄 회전하며 살피기</td><td>🔄 회전 / 🎤 <strong>"회전했어요"</strong></td></tr><tr><td>4/4</td><td>✅ 건너기 완료</td><td>📱 흔들기 / 🎤 <strong>"다 건넜어요"</strong></td></tr></table></div><div class="desc-list" style="margin-top:12px;">⚠️ iOS Safari: 음성인식 미지원 → 흔들기/회전만 자동 필터링<br>🔊 TTS: 미션 시작/단계/완료 시 음성안내 + 진동 0.5초×5회</div><br><img src="../../screenshots/03_mission_panel.png" style="width:100%;max-width:400px;border-radius:8px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.1);"><div class="desc-list" style="text-align:left;display:inline-block;"><strong>고정 오버레이</strong>: 상단 중앙<br><strong>🎯 미션 N/4</strong> + 프로그레스 바<br>📱 흔들기 / 🎤 음성인식 / 🔄 회전<br><strong>4단계</strong>: 초록불→좌우→회전→건너기<br>Enter/Space 스킵 + 완료 시 진동</div>',
         cmd: '"미션 시작! 횡단보도에 진입했습니다"',
         accent: "#ff6b6b"
     },
@@ -354,15 +354,7 @@ const slides = [
         accent: "#48dbfb"
     },
     {
-        cat: "MISSION", num: "13",
-        title: "미션 화면 — 안전 미션",
-        sub: "4단계 오버레이 패널",
-        desc: '<img src="../../screenshots/03_mission_panel.png" style="width:100%;max-width:400px;border-radius:8px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.1);"><div class="desc-list" style="text-align:left;display:inline-block;"><strong>고정 오버레이</strong>: 상단 중앙<br><strong>🎯 미션 N/4</strong> + 프로그레스 바<br>📱 흔들기 / 🎤 음성인식 / 🔄 회전<br><strong>4단계</strong>: 초록불→좌우→회전→건너기<br>Enter/Space 스킵 + 완료 시 진동</div>',
-        cmd: '"미션 시작! 횡단보도에 진입했습니다"',
-        accent: "#ff6b6b"
-    },
-    {
-        cat: "GOAL", num: "14",
+        cat: "GOAL", num: "13",
         title: "성과 및 기대 효과",
         sub: "공공데이터로 완성하는 아이 안전",
         desc: '<div class="desc-list" style="text-align:left;display:inline-block;">✅ 5종 공공데이터 통합 → 1,368개 위치정보 (유효좌표 100%)<br>✅ 데이터 파이프라인 자동화 → run_pipeline.py 3초<br>✅ 통합 지도 8종 레이어 + 아이콘/색상 커스터마이징<br>✅ 미션 시스템 4단계 (흔들기/회전/<strong>음성인식 랜덤</strong>)<br>✅ <strong>TTS 음성 출력</strong> + 진동 0.5초×5회<br>✅ <strong>초등학교앞 횡단보도 55개 DANGER 승격</strong><br>✅ PWA → 오프라인 지원, GitHub Pages 배포<br><br><em style="color:rgba(255,255,255,0.5);">등하굣길 위험 지역 사전 인지로 사고 30% 감소 기대</em></div>',
@@ -370,7 +362,7 @@ const slides = [
         accent: "#ffd32a"
     },
     {
-        cat: "FUTURE", num: "15",
+        cat: "FUTURE", num: "14",
         title: "향후 발전 계획",
         sub: "더 넓게, 더 스마트하게",
         desc: '<div class="desc-list" style="text-align:left;display:inline-block;"><strong>1.</strong> 전국 데이터 확대 — 250개 시군구<br><strong>2.</strong> <strong>iOS 음성 지원</strong> — SFSpeechRecognizer 연동 (현재 iOS 음성인식 미지원)<br><strong>3.</strong> 어린이 친화적 UI — 캐릭터/게임 스타일 지도<br><strong>4.</strong> 안전 미션 확장 + 보상 시스템 (뱃지/콤보)<br><strong>5.</strong> 아바타 시스템 — 지도 위 아바타 표시<br><strong>6.</strong> 뱃지 수집 — 안전 미션 완료 시 획득</div>',
@@ -378,7 +370,7 @@ const slides = [
         accent: "#ff6b9d"
     },
     {
-        cat: "FINISH", num: "16",
+        cat: "FINISH", num: "15",
         title: "공공데이터로 완성하는<br>아이 안전 지킴이",
         sub: "\"우리 아이들의 안전, 지금은 PWA로 시작합니다!\"",
         desc: '<div class="desc-list" style="font-size:clamp(12px,1.4vw,16px);"><strong>GitHub Pages</strong><br>https://feelmydream80-sys.github.io/kidssafty/<br><br><strong>통합 데이터</strong> — locations.json (1,368개, 7개 카테고리)<br><strong>데이터 파이프라인</strong> — python run_pipeline.py (3초)<br><strong>전체 소스</strong> — C:/dev/kidssafty/</div>',
